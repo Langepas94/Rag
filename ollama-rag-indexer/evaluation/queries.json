@@ -1,0 +1,54 @@
+{
+  "queries": [
+    {
+      "query": "How are source title section and chunk_id stored for every chunk?",
+      "expected_source": "README.md",
+      "expected_section": "Chunk Metadata"
+    },
+    {
+      "query": "Which strategy uses bounded character windows with overlap?",
+      "expected_source": "README.md",
+      "expected_section": "Fixed Windows"
+    },
+    {
+      "query": "What boundaries does structural chunking use before fallback splitting?",
+      "expected_source": "README.md",
+      "expected_section": "Structural Boundaries"
+    },
+    {
+      "query": "Where are hit at k reciprocal rank and section accuracy described?",
+      "expected_source": "articles/chunking_evaluation.md",
+      "expected_section": "Retrieval Metrics"
+    },
+    {
+      "query": "Which notes describe FAISS and NumPy vectors as storage backends?",
+      "expected_source": "articles/retrieval_architecture.md",
+      "expected_section": "Vector Storage"
+    },
+    {
+      "query": "What code function applies indexing stage 12 with metadata validation?",
+      "expected_source": "code/sample_indexing_service.py",
+      "expected_section": "function build_stage_12"
+    },
+    {
+      "query": "Which PDF chapter explains operational checks for document count and metadata coverage?",
+      "expected_source": "papers/operations_playbook.pdf",
+      "expected_section": "page"
+    },
+    {
+      "query": "How does the embedding backend request local vectors from Ollama?",
+      "expected_source": "articles/retrieval_architecture.md",
+      "expected_section": "Embedding Backend"
+    },
+    {
+      "query": "Why can chunks that are too small lose setup definitions and examples?",
+      "expected_source": "articles/chunking_evaluation.md",
+      "expected_section": "Chunk Metadata"
+    },
+    {
+      "query": "What service record keeps source title section and metadata fields?",
+      "expected_source": "code/sample_indexing_service.py",
+      "expected_section": "class ChunkRecord"
+    }
+  ]
+}
