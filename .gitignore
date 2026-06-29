@@ -1,8 +1,2 @@
 .DS_Store
 .venv/
-ollama-rag-indexer/indexes*/
-!ollama-rag-indexer/indexes-qwen/
-!ollama-rag-indexer/indexes-qwen/fixed/
-!ollama-rag-indexer/indexes-qwen/fixed/**
-!ollama-rag-indexer/indexes-qwen/structural/
-!ollama-rag-indexer/indexes-qwen/structural/**

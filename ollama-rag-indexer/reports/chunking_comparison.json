@@ -1,0 +1,1233 @@
+{
+  "created_at": "2026-06-29T13:30:50Z",
+  "strategies": {
+    "fixed": {
+      "manifest": {
+        "created_at": "2026-06-29T13:30:46Z",
+        "strategy": "fixed",
+        "embedder": "hash",
+        "model": "hash-384",
+        "corpus_dir": "corpus",
+        "document_count": 19,
+        "estimated_pages": 64.91,
+        "text_characters": 194718,
+        "chunk_settings": {
+          "max_chars": 1200,
+          "overlap": 180
+        },
+        "stats": {
+          "chunks": 199,
+          "avg_chars": 1140.52,
+          "min_chars": 194,
+          "max_chars": 1199,
+          "avg_tokens_estimate": 233.96,
+          "with_section": 199,
+          "with_section_ratio": 1.0,
+          "chunks_per_source": {
+            "README.md": 7,
+            "articles/chunking_evaluation.md": 57,
+            "articles/retrieval_architecture.md": 61,
+            "code/sample_indexing_service.py": 17,
+            "papers/operations_playbook.pdf": 57
+          }
+        },
+        "backend": "faiss",
+        "chunk_count": 199,
+        "dimension": 384,
+        "files": {
+          "chunks": "chunks.jsonl",
+          "vectors": "vectors.npy",
+          "faiss": "index.faiss"
+        }
+      },
+      "stats": {
+        "chunks": 199,
+        "avg_chars": 1140.52,
+        "min_chars": 194,
+        "max_chars": 1199,
+        "avg_tokens_estimate": 233.96,
+        "with_section": 199,
+        "with_section_ratio": 1.0,
+        "chunks_per_source": {
+          "README.md": 7,
+          "articles/chunking_evaluation.md": 57,
+          "articles/retrieval_architecture.md": 61,
+          "code/sample_indexing_service.py": 17,
+          "papers/operations_playbook.pdf": 57
+        }
+      },
+      "retrieval": {
+        "query_count": 10,
+        "source_hit_at_1": 0.4,
+        "source_hit_at_3": 0.6,
+        "source_hit_at_5": 0.7,
+        "section_hit_at_1": 0.1,
+        "section_hit_at_3": 0.5,
+        "section_hit_at_5": 0.5,
+        "mrr_source": 0.525,
+        "rows": [
+          {
+            "query": "How are source title section and chunk_id stored for every chunk?",
+            "expected_source": "README.md",
+            "expected_section": "Chunk Metadata",
+            "source_rank": null,
+            "section_rank": null,
+            "source_hit_at_1": 0,
+            "source_hit_at_3": 0,
+            "source_hit_at_5": 0,
+            "section_hit_at_1": 0,
+            "section_hit_at_3": 0,
+            "section_hit_at_5": 0,
+            "has_expected_section": true,
+            "mrr_source": 0.0,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 0.3662,
+                "source": "code/sample_indexing_service.py",
+                "section": "function build_stage_12",
+                "chunk_id": "fixed:c8b6c0ab89:00133"
+              },
+              {
+                "rank": 2,
+                "score": 0.356,
+                "source": "code/sample_indexing_service.py",
+                "section": "function build_stage_19",
+                "chunk_id": "fixed:c8b6c0ab89:00138"
+              },
+              {
+                "rank": 3,
+                "score": 0.356,
+                "source": "code/sample_indexing_service.py",
+                "section": "function build_stage_06",
+                "chunk_id": "fixed:c8b6c0ab89:00129"
+              },
+              {
+                "rank": 4,
+                "score": 0.3421,
+                "source": "code/sample_indexing_service.py",
+                "section": "function build_stage_03",
+                "chunk_id": "fixed:c8b6c0ab89:00127"
+              },
+              {
+                "rank": 5,
+                "score": 0.3408,
+                "source": "code/sample_indexing_service.py",
+                "section": "function build_stage_16",
+                "chunk_id": "fixed:c8b6c0ab89:00136"
+              }
+            ]
+          },
+          {
+            "query": "Which strategy uses bounded character windows with overlap?",
+            "expected_source": "README.md",
+            "expected_section": "Fixed Windows",
+            "source_rank": null,
+            "section_rank": 3,
+            "source_hit_at_1": 0,
+            "source_hit_at_3": 0,
+            "source_hit_at_5": 0,
+            "section_hit_at_1": 0,
+            "section_hit_at_3": 1,
+            "section_hit_at_5": 1,
+            "has_expected_section": true,
+            "mrr_source": 0.0,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 0.2099,
+                "source": "articles/retrieval_architecture.md",
+                "section": "Section 18: Chunk Metadata",
+                "chunk_id": "fixed:31f4132cce:00096"
+              },
+              {
+                "rank": 2,
+                "score": 0.2062,
+                "source": "papers/operations_playbook.pdf",
+                "section": "page 2",
+                "chunk_id": "fixed:197f6e0898:00146"
+              },
+              {
+                "rank": 3,
+                "score": 0.2022,
+                "source": "articles/chunking_evaluation.md",
+                "section": "Section 19: Fixed Windows",
+                "chunk_id": "fixed:da49b8b294:00039"
+              },
+              {
+                "rank": 4,
+                "score": 0.1996,
+                "source": "articles/chunking_evaluation.md",
+                "section": "Section 26: Chunk Metadata",
+                "chunk_id": "fixed:da49b8b294:00053"
+              },
+              {
+                "rank": 5,
+                "score": 0.1815,
+                "source": "papers/operations_playbook.pdf",
+                "section": "page 9",
+                "chunk_id": "fixed:197f6e0898:00177"
+              }
+            ]
+          },
+          {
+            "query": "What boundaries does structural chunking use before fallback splitting?",
+            "expected_source": "README.md",
+            "expected_section": "Structural Boundaries",
+            "source_rank": null,
+            "section_rank": 3,
+            "source_hit_at_1": 0,
+            "source_hit_at_3": 0,
+            "source_hit_at_5": 0,
+            "section_hit_at_1": 0,
+            "section_hit_at_3": 1,
+            "section_hit_at_5": 1,
+            "has_expected_section": true,
+            "mrr_source": 0.0,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 0.1551,
+                "source": "articles/retrieval_architecture.md",
+                "section": "Section 27: Fixed Windows",
+                "chunk_id": "fixed:31f4132cce:00112"
+              },
+              {
+                "rank": 2,
+                "score": 0.141,
+                "source": "papers/operations_playbook.pdf",
+                "section": "page 10",
+                "chunk_id": "fixed:197f6e0898:00179"
+              },
+              {
+                "rank": 3,
+                "score": 0.1345,
+                "source": "articles/chunking_evaluation.md",
+                "section": "Section 04: Structural Boundaries",
+                "chunk_id": "fixed:da49b8b294:00013"
+              },
+              {
+                "rank": 4,
+                "score": 0.1322,
+                "source": "articles/retrieval_architecture.md",
+                "section": "Section 04: Structural Boundaries",
+                "chunk_id": "fixed:31f4132cce:00070"
+              },
+              {
+                "rank": 5,
+                "score": 0.1309,
+                "source": "papers/operations_playbook.pdf",
+                "section": "page 10",
+                "chunk_id": "fixed:197f6e0898:00180"
+              }
+            ]
+          },
+          {
+            "query": "Where are hit at k reciprocal rank and section accuracy described?",
+            "expected_source": "articles/chunking_evaluation.md",
+            "expected_section": "Retrieval Metrics",
+            "source_rank": 1,
+            "section_rank": 3,
+            "source_hit_at_1": 1,
+            "source_hit_at_3": 1,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 0,
+            "section_hit_at_3": 1,
+            "section_hit_at_5": 1,
+            "has_expected_section": true,
+            "mrr_source": 1.0,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 0.3665,
+                "source": "articles/chunking_evaluation.md",
+                "section": "Section 22: Vector Storage",
+                "chunk_id": "fixed:da49b8b294:00046"
+              },
+              {
+                "rank": 2,
+                "score": 0.3528,
+                "source": "papers/operations_playbook.pdf",
+                "section": "page 7",
+                "chunk_id": "fixed:197f6e0898:00169"
+              },
+              {
+                "rank": 3,
+                "score": 0.3409,
+                "source": "articles/retrieval_architecture.md",
+                "section": "Section 15: Retrieval Metrics",
+                "chunk_id": "fixed:31f4132cce:00089"
+              },
+              {
+                "rank": 4,
+                "score": 0.338,
+                "source": "papers/operations_playbook.pdf",
+                "section": "page 4",
+                "chunk_id": "fixed:197f6e0898:00154"
+              },
+              {
+                "rank": 5,
+                "score": 0.3269,
+                "source": "articles/retrieval_architecture.md",
+                "section": "Section 22: Vector Storage",
+                "chunk_id": "fixed:31f4132cce:00103"
+              }
+            ]
+          },
+          {
+            "query": "Which notes describe FAISS and NumPy vectors as storage backends?",
+            "expected_source": "articles/retrieval_architecture.md",
+            "expected_section": "Vector Storage",
+            "source_rank": 2,
+            "section_rank": 3,
+            "source_hit_at_1": 0,
+            "source_hit_at_3": 1,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 0,
+            "section_hit_at_3": 1,
+            "section_hit_at_5": 1,
+            "has_expected_section": true,
+            "mrr_source": 0.5,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 0.2309,
+                "source": "articles/chunking_evaluation.md",
+                "section": "Section 13: Embedding Backend",
+                "chunk_id": "fixed:da49b8b294:00030"
+              },
+              {
+                "rank": 2,
+                "score": 0.2304,
+                "source": "articles/retrieval_architecture.md",
+                "section": "Section 13: Embedding Backend",
+                "chunk_id": "fixed:31f4132cce:00087"
+              },
+              {
+                "rank": 3,
+                "score": 0.2153,
+                "source": "articles/retrieval_architecture.md",
+                "section": "Section 06: Vector Storage",
+                "chunk_id": "fixed:31f4132cce:00073"
+              },
+              {
+                "rank": 4,
+                "score": 0.2053,
+                "source": "articles/chunking_evaluation.md",
+                "section": "Section 06: Vector Storage",
+                "chunk_id": "fixed:da49b8b294:00016"
+              },
+              {
+                "rank": 5,
+                "score": 0.1886,
+                "source": "articles/retrieval_architecture.md",
+                "section": "Section 05: Embedding Backend",
+                "chunk_id": "fixed:31f4132cce:00072"
+              }
+            ]
+          },
+          {
+            "query": "What code function applies indexing stage 12 with metadata validation?",
+            "expected_source": "code/sample_indexing_service.py",
+            "expected_section": "function build_stage_12",
+            "source_rank": 1,
+            "section_rank": null,
+            "source_hit_at_1": 1,
+            "source_hit_at_3": 1,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 0,
+            "section_hit_at_3": 0,
+            "section_hit_at_5": 0,
+            "has_expected_section": true,
+            "mrr_source": 1.0,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 0.2729,
+                "source": "code/sample_indexing_service.py",
+                "section": "function build_stage_07",
+                "chunk_id": "fixed:c8b6c0ab89:00130"
+              },
+              {
+                "rank": 2,
+                "score": 0.2719,
+                "source": "code/sample_indexing_service.py",
+                "section": "function build_stage_20",
+                "chunk_id": "fixed:c8b6c0ab89:00139"
+              },
+              {
+                "rank": 3,
+                "score": 0.2689,
+                "source": "code/sample_indexing_service.py",
+                "section": "function build_stage_10",
+                "chunk_id": "fixed:c8b6c0ab89:00132"
+              },
+              {
+                "rank": 4,
+                "score": 0.2556,
+                "source": "code/sample_indexing_service.py",
+                "section": "function build_stage_04",
+                "chunk_id": "fixed:c8b6c0ab89:00128"
+              },
+              {
+                "rank": 5,
+                "score": 0.2548,
+                "source": "code/sample_indexing_service.py",
+                "section": "function build_stage_17",
+                "chunk_id": "fixed:c8b6c0ab89:00137"
+              }
+            ]
+          },
+          {
+            "query": "Which PDF chapter explains operational checks for document count and metadata coverage?",
+            "expected_source": "papers/operations_playbook.pdf",
+            "expected_section": "page",
+            "source_rank": 1,
+            "section_rank": 1,
+            "source_hit_at_1": 1,
+            "source_hit_at_3": 1,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 1,
+            "section_hit_at_3": 1,
+            "section_hit_at_5": 1,
+            "has_expected_section": true,
+            "mrr_source": 1.0,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 0.2734,
+                "source": "papers/operations_playbook.pdf",
+                "section": "page 12",
+                "chunk_id": "fixed:197f6e0898:00187"
+              },
+              {
+                "rank": 2,
+                "score": 0.2565,
+                "source": "articles/chunking_evaluation.md",
+                "section": "Section 31: Retrieval Metrics",
+                "chunk_id": "fixed:da49b8b294:00062"
+              },
+              {
+                "rank": 3,
+                "score": 0.2421,
+                "source": "articles/retrieval_architecture.md",
+                "section": "Section 31: Retrieval Metrics",
+                "chunk_id": "fixed:31f4132cce:00119"
+              },
+              {
+                "rank": 4,
+                "score": 0.2305,
+                "source": "papers/operations_playbook.pdf",
+                "section": "page 12",
+                "chunk_id": "fixed:197f6e0898:00188"
+              },
+              {
+                "rank": 5,
+                "score": 0.2301,
+                "source": "papers/operations_playbook.pdf",
+                "section": "page 8",
+                "chunk_id": "fixed:197f6e0898:00171"
+              }
+            ]
+          },
+          {
+            "query": "How does the embedding backend request local vectors from Ollama?",
+            "expected_source": "articles/retrieval_architecture.md",
+            "expected_section": "Embedding Backend",
+            "source_rank": 4,
+            "section_rank": null,
+            "source_hit_at_1": 0,
+            "source_hit_at_3": 0,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 0,
+            "section_hit_at_3": 0,
+            "section_hit_at_5": 0,
+            "has_expected_section": true,
+            "mrr_source": 0.25,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 0.347,
+                "source": "papers/operations_playbook.pdf",
+                "section": "page 3",
+                "chunk_id": "fixed:197f6e0898:00150"
+              },
+              {
+                "rank": 2,
+                "score": 0.3434,
+                "source": "articles/chunking_evaluation.md",
+                "section": "Section 04: Structural Boundaries",
+                "chunk_id": "fixed:da49b8b294:00014"
+              },
+              {
+                "rank": 3,
+                "score": 0.3337,
+                "source": "papers/operations_playbook.pdf",
+                "section": "page 10",
+                "chunk_id": "fixed:197f6e0898:00181"
+              },
+              {
+                "rank": 4,
+                "score": 0.331,
+                "source": "articles/retrieval_architecture.md",
+                "section": "Section 04: Structural Boundaries",
+                "chunk_id": "fixed:31f4132cce:00071"
+              },
+              {
+                "rank": 5,
+                "score": 0.3212,
+                "source": "papers/operations_playbook.pdf",
+                "section": "page 6",
+                "chunk_id": "fixed:197f6e0898:00165"
+              }
+            ]
+          },
+          {
+            "query": "Why can chunks that are too small lose setup definitions and examples?",
+            "expected_source": "articles/chunking_evaluation.md",
+            "expected_section": "Chunk Metadata",
+            "source_rank": 2,
+            "section_rank": null,
+            "source_hit_at_1": 0,
+            "source_hit_at_3": 1,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 0,
+            "section_hit_at_3": 0,
+            "section_hit_at_5": 0,
+            "has_expected_section": true,
+            "mrr_source": 0.5,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 0.3141,
+                "source": "papers/operations_playbook.pdf",
+                "section": "page 6",
+                "chunk_id": "fixed:197f6e0898:00165"
+              },
+              {
+                "rank": 2,
+                "score": 0.3101,
+                "source": "articles/chunking_evaluation.md",
+                "section": "Section 21: Embedding Backend",
+                "chunk_id": "fixed:da49b8b294:00043"
+              },
+              {
+                "rank": 3,
+                "score": 0.2963,
+                "source": "papers/operations_playbook.pdf",
+                "section": "page 11",
+                "chunk_id": "fixed:197f6e0898:00182"
+              },
+              {
+                "rank": 4,
+                "score": 0.2948,
+                "source": "papers/operations_playbook.pdf",
+                "section": "page 4",
+                "chunk_id": "fixed:197f6e0898:00157"
+              },
+              {
+                "rank": 5,
+                "score": 0.2931,
+                "source": "articles/retrieval_architecture.md",
+                "section": "Section 12: Structural Boundaries",
+                "chunk_id": "fixed:31f4132cce:00085"
+              }
+            ]
+          },
+          {
+            "query": "What service record keeps source title section and metadata fields?",
+            "expected_source": "code/sample_indexing_service.py",
+            "expected_section": "class ChunkRecord",
+            "source_rank": 1,
+            "section_rank": null,
+            "source_hit_at_1": 1,
+            "source_hit_at_3": 1,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 0,
+            "section_hit_at_3": 0,
+            "section_hit_at_5": 0,
+            "has_expected_section": true,
+            "mrr_source": 1.0,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 0.5976,
+                "source": "code/sample_indexing_service.py",
+                "section": "function build_stage_23",
+                "chunk_id": "fixed:c8b6c0ab89:00141"
+              },
+              {
+                "rank": 2,
+                "score": 0.5715,
+                "source": "code/sample_indexing_service.py",
+                "section": "function build_stage_22",
+                "chunk_id": "fixed:c8b6c0ab89:00140"
+              },
+              {
+                "rank": 3,
+                "score": 0.5715,
+                "source": "code/sample_indexing_service.py",
+                "section": "function build_stage_09",
+                "chunk_id": "fixed:c8b6c0ab89:00131"
+              },
+              {
+                "rank": 4,
+                "score": 0.5695,
+                "source": "code/sample_indexing_service.py",
+                "section": "function build_stage_12",
+                "chunk_id": "fixed:c8b6c0ab89:00133"
+              },
+              {
+                "rank": 5,
+                "score": 0.5531,
+                "source": "code/sample_indexing_service.py",
+                "section": "function build_stage_19",
+                "chunk_id": "fixed:c8b6c0ab89:00138"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "structural": {
+      "manifest": {
+        "created_at": "2026-06-29T13:30:46Z",
+        "strategy": "structural",
+        "embedder": "hash",
+        "model": "hash-384",
+        "corpus_dir": "corpus",
+        "document_count": 19,
+        "estimated_pages": 64.91,
+        "text_characters": 194718,
+        "chunk_settings": {
+          "max_chars": 1800,
+          "overlap": 160
+        },
+        "stats": {
+          "chunks": 176,
+          "avg_chars": 1160.82,
+          "min_chars": 127,
+          "max_chars": 1799,
+          "avg_tokens_estimate": 237.19,
+          "with_section": 176,
+          "with_section_ratio": 1.0,
+          "chunks_per_source": {
+            "README.md": 8,
+            "articles/chunking_evaluation.md": 44,
+            "articles/retrieval_architecture.md": 56,
+            "code/sample_indexing_service.py": 25,
+            "papers/operations_playbook.pdf": 43
+          }
+        },
+        "backend": "faiss",
+        "chunk_count": 176,
+        "dimension": 384,
+        "files": {
+          "chunks": "chunks.jsonl",
+          "vectors": "vectors.npy",
+          "faiss": "index.faiss"
+        }
+      },
+      "stats": {
+        "chunks": 176,
+        "avg_chars": 1160.82,
+        "min_chars": 127,
+        "max_chars": 1799,
+        "avg_tokens_estimate": 237.19,
+        "with_section": 176,
+        "with_section_ratio": 1.0,
+        "chunks_per_source": {
+          "README.md": 8,
+          "articles/chunking_evaluation.md": 44,
+          "articles/retrieval_architecture.md": 56,
+          "code/sample_indexing_service.py": 25,
+          "papers/operations_playbook.pdf": 43
+        }
+      },
+      "retrieval": {
+        "query_count": 10,
+        "source_hit_at_1": 0.2,
+        "source_hit_at_3": 0.6,
+        "source_hit_at_5": 0.8,
+        "section_hit_at_1": 0.1,
+        "section_hit_at_3": 0.7,
+        "section_hit_at_5": 0.7,
+        "mrr_source": 0.4117,
+        "rows": [
+          {
+            "query": "How are source title section and chunk_id stored for every chunk?",
+            "expected_source": "README.md",
+            "expected_section": "Chunk Metadata",
+            "source_rank": null,
+            "section_rank": null,
+            "source_hit_at_1": 0,
+            "source_hit_at_3": 0,
+            "source_hit_at_5": 0,
+            "section_hit_at_1": 0,
+            "section_hit_at_3": 0,
+            "section_hit_at_5": 0,
+            "has_expected_section": true,
+            "mrr_source": 0.0,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 0.3264,
+                "source": "code/sample_indexing_service.py",
+                "section": "function build_stage_18",
+                "chunk_id": "structural:c8b6c0ab89:00127"
+              },
+              {
+                "rank": 2,
+                "score": 0.3095,
+                "source": "code/sample_indexing_service.py",
+                "section": "function build_stage_08",
+                "chunk_id": "structural:c8b6c0ab89:00117"
+              },
+              {
+                "rank": 3,
+                "score": 0.3079,
+                "source": "code/sample_indexing_service.py",
+                "section": "function build_stage_07",
+                "chunk_id": "structural:c8b6c0ab89:00116"
+              },
+              {
+                "rank": 4,
+                "score": 0.3079,
+                "source": "code/sample_indexing_service.py",
+                "section": "function build_stage_06",
+                "chunk_id": "structural:c8b6c0ab89:00115"
+              },
+              {
+                "rank": 5,
+                "score": 0.3079,
+                "source": "code/sample_indexing_service.py",
+                "section": "function build_stage_04",
+                "chunk_id": "structural:c8b6c0ab89:00113"
+              }
+            ]
+          },
+          {
+            "query": "Which strategy uses bounded character windows with overlap?",
+            "expected_source": "README.md",
+            "expected_section": "Fixed Windows",
+            "source_rank": 5,
+            "section_rank": 3,
+            "source_hit_at_1": 0,
+            "source_hit_at_3": 0,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 0,
+            "section_hit_at_3": 1,
+            "section_hit_at_5": 1,
+            "has_expected_section": true,
+            "mrr_source": 0.2,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 0.2274,
+                "source": "papers/operations_playbook.pdf",
+                "section": "page 5",
+                "chunk_id": "structural:197f6e0898:00147"
+              },
+              {
+                "rank": 2,
+                "score": 0.2165,
+                "source": "papers/operations_playbook.pdf",
+                "section": "page 9",
+                "chunk_id": "structural:197f6e0898:00159"
+              },
+              {
+                "rank": 3,
+                "score": 0.1499,
+                "source": "articles/retrieval_architecture.md",
+                "section": "Section 11: Fixed Windows",
+                "chunk_id": "structural:31f4132cce:00069"
+              },
+              {
+                "rank": 4,
+                "score": 0.1487,
+                "source": "articles/chunking_evaluation.md",
+                "section": "Section 11: Fixed Windows",
+                "chunk_id": "structural:da49b8b294:00022"
+              },
+              {
+                "rank": 5,
+                "score": 0.1476,
+                "source": "README.md",
+                "section": "Fixed Windows",
+                "chunk_id": "structural:8ec9a00bfd:00002"
+              }
+            ]
+          },
+          {
+            "query": "What boundaries does structural chunking use before fallback splitting?",
+            "expected_source": "README.md",
+            "expected_section": "Structural Boundaries",
+            "source_rank": 3,
+            "section_rank": 3,
+            "source_hit_at_1": 0,
+            "source_hit_at_3": 1,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 0,
+            "section_hit_at_3": 1,
+            "section_hit_at_5": 1,
+            "has_expected_section": true,
+            "mrr_source": 0.3333333333333333,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 0.2021,
+                "source": "papers/operations_playbook.pdf",
+                "section": "page 2",
+                "chunk_id": "structural:197f6e0898:00138"
+              },
+              {
+                "rank": 2,
+                "score": 0.1429,
+                "source": "papers/operations_playbook.pdf",
+                "section": "page 5",
+                "chunk_id": "structural:197f6e0898:00147"
+              },
+              {
+                "rank": 3,
+                "score": 0.1402,
+                "source": "README.md",
+                "section": "Structural Boundaries",
+                "chunk_id": "structural:8ec9a00bfd:00003"
+              },
+              {
+                "rank": 4,
+                "score": 0.1368,
+                "source": "papers/operations_playbook.pdf",
+                "section": "page 6",
+                "chunk_id": "structural:197f6e0898:00150"
+              },
+              {
+                "rank": 5,
+                "score": 0.1327,
+                "source": "articles/retrieval_architecture.md",
+                "section": "Section 28: Structural Boundaries",
+                "chunk_id": "structural:31f4132cce:00097"
+              }
+            ]
+          },
+          {
+            "query": "Where are hit at k reciprocal rank and section accuracy described?",
+            "expected_source": "articles/chunking_evaluation.md",
+            "expected_section": "Retrieval Metrics",
+            "source_rank": 3,
+            "section_rank": 2,
+            "source_hit_at_1": 0,
+            "source_hit_at_3": 1,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 0,
+            "section_hit_at_3": 1,
+            "section_hit_at_5": 1,
+            "has_expected_section": true,
+            "mrr_source": 0.3333333333333333,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 0.415,
+                "source": "papers/operations_playbook.pdf",
+                "section": "page 7",
+                "chunk_id": "structural:197f6e0898:00153"
+              },
+              {
+                "rank": 2,
+                "score": 0.297,
+                "source": "articles/retrieval_architecture.md",
+                "section": "Section 15: Retrieval Metrics",
+                "chunk_id": "structural:31f4132cce:00075"
+              },
+              {
+                "rank": 3,
+                "score": 0.2954,
+                "source": "articles/chunking_evaluation.md",
+                "section": "Section 15: Retrieval Metrics",
+                "chunk_id": "structural:da49b8b294:00027"
+              },
+              {
+                "rank": 4,
+                "score": 0.29,
+                "source": "articles/retrieval_architecture.md",
+                "section": "Section 07: Retrieval Metrics",
+                "chunk_id": "structural:31f4132cce:00062"
+              },
+              {
+                "rank": 5,
+                "score": 0.2896,
+                "source": "articles/retrieval_architecture.md",
+                "section": "Section 31: Retrieval Metrics",
+                "chunk_id": "structural:31f4132cce:00101"
+              }
+            ]
+          },
+          {
+            "query": "Which notes describe FAISS and NumPy vectors as storage backends?",
+            "expected_source": "articles/retrieval_architecture.md",
+            "expected_section": "Vector Storage",
+            "source_rank": 2,
+            "section_rank": 1,
+            "source_hit_at_1": 0,
+            "source_hit_at_3": 1,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 1,
+            "section_hit_at_3": 1,
+            "section_hit_at_5": 1,
+            "has_expected_section": true,
+            "mrr_source": 0.5,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 0.1905,
+                "source": "README.md",
+                "section": "Vector Storage",
+                "chunk_id": "structural:8ec9a00bfd:00005"
+              },
+              {
+                "rank": 2,
+                "score": 0.1849,
+                "source": "articles/retrieval_architecture.md",
+                "section": "Section 22: Vector Storage",
+                "chunk_id": "structural:31f4132cce:00087"
+              },
+              {
+                "rank": 3,
+                "score": 0.1849,
+                "source": "articles/retrieval_architecture.md",
+                "section": "Section 06: Vector Storage",
+                "chunk_id": "structural:31f4132cce:00061"
+              },
+              {
+                "rank": 4,
+                "score": 0.1849,
+                "source": "articles/retrieval_architecture.md",
+                "section": "Section 30: Vector Storage",
+                "chunk_id": "structural:31f4132cce:00100"
+              },
+              {
+                "rank": 5,
+                "score": 0.1846,
+                "source": "articles/retrieval_architecture.md",
+                "section": "Section 14: Vector Storage",
+                "chunk_id": "structural:31f4132cce:00074"
+              }
+            ]
+          },
+          {
+            "query": "What code function applies indexing stage 12 with metadata validation?",
+            "expected_source": "code/sample_indexing_service.py",
+            "expected_section": "function build_stage_12",
+            "source_rank": 1,
+            "section_rank": 2,
+            "source_hit_at_1": 1,
+            "source_hit_at_3": 1,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 0,
+            "section_hit_at_3": 1,
+            "section_hit_at_5": 1,
+            "has_expected_section": true,
+            "mrr_source": 1.0,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 0.2537,
+                "source": "code/sample_indexing_service.py",
+                "section": "function build_stage_10",
+                "chunk_id": "structural:c8b6c0ab89:00119"
+              },
+              {
+                "rank": 2,
+                "score": 0.2537,
+                "source": "code/sample_indexing_service.py",
+                "section": "function build_stage_12",
+                "chunk_id": "structural:c8b6c0ab89:00121"
+              },
+              {
+                "rank": 3,
+                "score": 0.2344,
+                "source": "code/sample_indexing_service.py",
+                "section": "function build_stage_15",
+                "chunk_id": "structural:c8b6c0ab89:00124"
+              },
+              {
+                "rank": 4,
+                "score": 0.2319,
+                "source": "code/sample_indexing_service.py",
+                "section": "function build_stage_08",
+                "chunk_id": "structural:c8b6c0ab89:00117"
+              },
+              {
+                "rank": 5,
+                "score": 0.2306,
+                "source": "code/sample_indexing_service.py",
+                "section": "function build_stage_07",
+                "chunk_id": "structural:c8b6c0ab89:00116"
+              }
+            ]
+          },
+          {
+            "query": "Which PDF chapter explains operational checks for document count and metadata coverage?",
+            "expected_source": "papers/operations_playbook.pdf",
+            "expected_section": "page",
+            "source_rank": 2,
+            "section_rank": 2,
+            "source_hit_at_1": 0,
+            "source_hit_at_3": 1,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 0,
+            "section_hit_at_3": 1,
+            "section_hit_at_5": 1,
+            "has_expected_section": true,
+            "mrr_source": 0.5,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 0.2339,
+                "source": "README.md",
+                "section": "Operational Checks",
+                "chunk_id": "structural:8ec9a00bfd:00007"
+              },
+              {
+                "rank": 2,
+                "score": 0.2239,
+                "source": "papers/operations_playbook.pdf",
+                "section": "page 4",
+                "chunk_id": "structural:197f6e0898:00143"
+              },
+              {
+                "rank": 3,
+                "score": 0.2236,
+                "source": "papers/operations_playbook.pdf",
+                "section": "page 8",
+                "chunk_id": "structural:197f6e0898:00155"
+              },
+              {
+                "rank": 4,
+                "score": 0.2219,
+                "source": "articles/retrieval_architecture.md",
+                "section": "Section 32: Operational Checks",
+                "chunk_id": "structural:31f4132cce:00102"
+              },
+              {
+                "rank": 5,
+                "score": 0.2219,
+                "source": "articles/retrieval_architecture.md",
+                "section": "Section 24: Operational Checks",
+                "chunk_id": "structural:31f4132cce:00089"
+              }
+            ]
+          },
+          {
+            "query": "How does the embedding backend request local vectors from Ollama?",
+            "expected_source": "articles/retrieval_architecture.md",
+            "expected_section": "Embedding Backend",
+            "source_rank": 4,
+            "section_rank": 2,
+            "source_hit_at_1": 0,
+            "source_hit_at_3": 0,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 0,
+            "section_hit_at_3": 1,
+            "section_hit_at_5": 1,
+            "has_expected_section": true,
+            "mrr_source": 0.25,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 0.3569,
+                "source": "papers/operations_playbook.pdf",
+                "section": "page 6",
+                "chunk_id": "structural:197f6e0898:00150"
+              },
+              {
+                "rank": 2,
+                "score": 0.3337,
+                "source": "README.md",
+                "section": "Embedding Backend",
+                "chunk_id": "structural:8ec9a00bfd:00004"
+              },
+              {
+                "rank": 3,
+                "score": 0.327,
+                "source": "papers/operations_playbook.pdf",
+                "section": "page 3",
+                "chunk_id": "structural:197f6e0898:00139"
+              },
+              {
+                "rank": 4,
+                "score": 0.322,
+                "source": "articles/retrieval_architecture.md",
+                "section": "Section 21: Embedding Backend",
+                "chunk_id": "structural:31f4132cce:00085"
+              },
+              {
+                "rank": 5,
+                "score": 0.322,
+                "source": "articles/retrieval_architecture.md",
+                "section": "Section 05: Embedding Backend",
+                "chunk_id": "structural:31f4132cce:00059"
+              }
+            ]
+          },
+          {
+            "query": "Why can chunks that are too small lose setup definitions and examples?",
+            "expected_source": "articles/chunking_evaluation.md",
+            "expected_section": "Chunk Metadata",
+            "source_rank": null,
+            "section_rank": null,
+            "source_hit_at_1": 0,
+            "source_hit_at_3": 0,
+            "source_hit_at_5": 0,
+            "section_hit_at_1": 0,
+            "section_hit_at_3": 0,
+            "section_hit_at_5": 0,
+            "has_expected_section": true,
+            "mrr_source": 0.0,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 0.3546,
+                "source": "papers/operations_playbook.pdf",
+                "section": "page 14",
+                "chunk_id": "structural:197f6e0898:00174"
+              },
+              {
+                "rank": 2,
+                "score": 0.3279,
+                "source": "papers/operations_playbook.pdf",
+                "section": "page 13",
+                "chunk_id": "structural:197f6e0898:00171"
+              },
+              {
+                "rank": 3,
+                "score": 0.3208,
+                "source": "papers/operations_playbook.pdf",
+                "section": "page 1",
+                "chunk_id": "structural:197f6e0898:00135"
+              },
+              {
+                "rank": 4,
+                "score": 0.2796,
+                "source": "papers/operations_playbook.pdf",
+                "section": "page 12",
+                "chunk_id": "structural:197f6e0898:00168"
+              },
+              {
+                "rank": 5,
+                "score": 0.2593,
+                "source": "papers/operations_playbook.pdf",
+                "section": "page 11",
+                "chunk_id": "structural:197f6e0898:00165"
+              }
+            ]
+          },
+          {
+            "query": "What service record keeps source title section and metadata fields?",
+            "expected_source": "code/sample_indexing_service.py",
+            "expected_section": "class ChunkRecord",
+            "source_rank": 1,
+            "section_rank": null,
+            "source_hit_at_1": 1,
+            "source_hit_at_3": 1,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 0,
+            "section_hit_at_3": 0,
+            "section_hit_at_5": 0,
+            "has_expected_section": true,
+            "mrr_source": 1.0,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 0.5477,
+                "source": "code/sample_indexing_service.py",
+                "section": "function build_stage_18",
+                "chunk_id": "structural:c8b6c0ab89:00127"
+              },
+              {
+                "rank": 2,
+                "score": 0.5333,
+                "source": "code/sample_indexing_service.py",
+                "section": "function build_stage_08",
+                "chunk_id": "structural:c8b6c0ab89:00117"
+              },
+              {
+                "rank": 3,
+                "score": 0.5305,
+                "source": "code/sample_indexing_service.py",
+                "section": "function build_stage_05",
+                "chunk_id": "structural:c8b6c0ab89:00114"
+              },
+              {
+                "rank": 4,
+                "score": 0.5305,
+                "source": "code/sample_indexing_service.py",
+                "section": "function build_stage_04",
+                "chunk_id": "structural:c8b6c0ab89:00113"
+              },
+              {
+                "rank": 5,
+                "score": 0.5305,
+                "source": "code/sample_indexing_service.py",
+                "section": "function build_stage_03",
+                "chunk_id": "structural:c8b6c0ab89:00112"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "queries": [
+    {
+      "query": "How are source title section and chunk_id stored for every chunk?",
+      "expected_source": "README.md",
+      "expected_section": "Chunk Metadata"
+    },
+    {
+      "query": "Which strategy uses bounded character windows with overlap?",
+      "expected_source": "README.md",
+      "expected_section": "Fixed Windows"
+    },
+    {
+      "query": "What boundaries does structural chunking use before fallback splitting?",
+      "expected_source": "README.md",
+      "expected_section": "Structural Boundaries"
+    },
+    {
+      "query": "Where are hit at k reciprocal rank and section accuracy described?",
+      "expected_source": "articles/chunking_evaluation.md",
+      "expected_section": "Retrieval Metrics"
+    },
+    {
+      "query": "Which notes describe FAISS and NumPy vectors as storage backends?",
+      "expected_source": "articles/retrieval_architecture.md",
+      "expected_section": "Vector Storage"
+    },
+    {
+      "query": "What code function applies indexing stage 12 with metadata validation?",
+      "expected_source": "code/sample_indexing_service.py",
+      "expected_section": "function build_stage_12"
+    },
+    {
+      "query": "Which PDF chapter explains operational checks for document count and metadata coverage?",
+      "expected_source": "papers/operations_playbook.pdf",
+      "expected_section": "page"
+    },
+    {
+      "query": "How does the embedding backend request local vectors from Ollama?",
+      "expected_source": "articles/retrieval_architecture.md",
+      "expected_section": "Embedding Backend"
+    },
+    {
+      "query": "Why can chunks that are too small lose setup definitions and examples?",
+      "expected_source": "articles/chunking_evaluation.md",
+      "expected_section": "Chunk Metadata"
+    },
+    {
+      "query": "What service record keeps source title section and metadata fields?",
+      "expected_source": "code/sample_indexing_service.py",
+      "expected_section": "class ChunkRecord"
+    }
+  ]
+}

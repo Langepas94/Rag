@@ -4,6 +4,4 @@ __pycache__/
 .pytest_cache/
 *.egg-info/
 *.pyc
-indexes/
-reports/
 generated_sources/
