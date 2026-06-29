@@ -1,0 +1,261 @@
+//! Live end-to-end: orchestrated turn (memory+profile+invariants+MCP) and the
+//! travel-weather multi-agent flow. Needs DEEPSEEK_API_KEY + the live MCP.
+//! Run: `cargo test --test live_orchestrator -- --ignored --nocapture`
+
+use std::sync::Arc;
+
+use tg_agent::{
+    agent::{self, session::ChatSession},
+    config::LlmConfig,
+    llm::Llm,
+    mcp_client::ConnectParams,
+    state::BotState,
+};
+
+async fn setup() -> (Arc<Llm>, BotState) {
+    let api_key = std::env::var("LLM_API_KEY")
+        .or_else(|_| std::env::var("DEEPSEEK_API_KEY"))
+        .expect("set LLM_API_KEY");
+    let model = std::env::var("LLM_MODEL").unwrap_or_else(|_| "deepseek-v4-flash".into());
+    std::env::set_var(
+        "STATE_FILE",
+        std::env::temp_dir().join("tg_orch_state.json"),
+    );
+    std::env::set_var(
+        "SESSIONS_DIR",
+        std::env::temp_dir().join("tg_orch_sessions"),
+    );
+
+    let llm = Arc::new(Llm::new(LlmConfig {
+        api_key,
+        base_url: "https://api.deepseek.com".into(),
+        model,
+    }));
+    let (tx, _rx) = tokio::sync::broadcast::channel(8);
+    let state = BotState::with_llm(tx, Some(llm.clone()));
+    state
+        .connect_mcp(ConnectParams {
+            name: "weather".into(),
+            url: "http://5.129.234.9:3000/mcp".into(),
+            auth: None,
+            headers: vec![],
+            command: vec![],
+            env: vec![],
+        })
+        .await
+        .expect("connect MCP");
+    (llm, state)
+}
+
+#[tokio::test]
+#[ignore]
+async fn orchestrated_turn_uses_profile_and_invariants() {
+    let (llm, state) = setup().await;
+    let mut session = ChatSession::new(101);
+    session.profile.set("home_city", "Волгоград");
+
+    let result = agent::run_turn(
+        &llm,
+        &state,
+        &mut session,
+        "Какая погода у меня дома? Кратко.",
+        None,
+    )
+    .await
+    .expect("turn");
+
+    println!("\n=== ANSWER ===\n{}\n", result.answer);
+    println!(
+        "facts_learned={}, invariant={:?}",
+        result.facts_learned, result.invariant_status
+    );
+
+    // invariant: must contain a number (temperature)
+    assert!(
+        result.answer.chars().any(|c| c.is_ascii_digit()),
+        "answer has no number: {}",
+        result.answer
+    );
+    assert_ne!(
+        result.invariant_status,
+        agent::invariants::InvariantStatus::Failed
+    );
+}
+
+#[tokio::test]
+#[ignore]
+async fn agent_self_subscribes_on_collect_request() {
+    let (llm, state) = setup().await;
+    // a bot handle is required for start_watch; use a dummy token (no network call
+    // happens because the watch's first tick is one interval away).
+    state.set_bot(teloxide::Bot::new("123:dummy")).await;
+
+    let mut session = ChatSession::new(303);
+    let result = agent::run_turn(
+        &llm,
+        &state,
+        &mut session,
+        "Собирай погоду в Волгограде каждые 2 минуты и присылай мне сводку.",
+        None,
+    )
+    .await
+    .expect("turn");
+
+    println!("\n=== ANSWER ===\n{}\n", result.answer);
+    let watches = state.list_watches().await;
+    println!("watches registered: {watches:?}");
+    assert!(
+        !watches.is_empty(),
+        "agent did not self-subscribe via schedule_summary"
+    );
+}
+
+#[tokio::test]
+#[ignore]
+async fn agent_uses_server_push_and_records_sub() {
+    let (llm, state) = setup().await;
+    state.set_bot(teloxide::Bot::new("123:dummy")).await;
+
+    let mut session = ChatSession::new(505);
+    let result = agent::run_turn(
+        &llm,
+        &state,
+        &mut session,
+        "Собирай погоду в Волгограде и подписывай меня на сводки.",
+        None,
+    )
+    .await
+    .expect("turn");
+    println!("\n=== ANSWER ===\n{}\n", result.answer);
+
+    // The agent should have used the server-push path → a durable push-sub
+    // recorded for THIS chat (session_id forced to the chat id).
+    let subs = state.push_subs.lock().await.clone();
+    println!("push_subs: {subs:?}");
+    assert!(
+        subs.iter()
+            .any(|s| s.chat_id == 505 && s.server == "weather"),
+        "agent did not subscribe to server push"
+    );
+}
+
+#[tokio::test]
+#[ignore]
+async fn agent_cancels_subscription_on_request() {
+    let (llm, state) = setup().await;
+    state.set_bot(teloxide::Bot::new("123:dummy")).await;
+
+    // seed a subscription directly
+    state
+        .schedule_summary(
+            404,
+            "weather".into(),
+            "get_weather_summary".into(),
+            None,
+            10,
+            None,
+        )
+        .await;
+    assert_eq!(state.list_watches().await.len(), 1);
+
+    let mut session = ChatSession::new(404);
+    let result = agent::run_turn(
+        &llm,
+        &state,
+        &mut session,
+        "Отмени подписку на погоду.",
+        None,
+    )
+    .await
+    .expect("turn");
+    println!("\n=== ANSWER ===\n{}\n", result.answer);
+
+    assert!(
+        state.list_watches().await.is_empty(),
+        "agent did not cancel the subscription"
+    );
+}
+
+#[tokio::test]
+#[ignore]
+async fn trip_swarm_clarifies_then_plans() {
+    let (llm, state) = setup().await;
+    let mut session = ChatSession::new(202);
+
+    // 1. A trip request auto-starts the flow and should CLARIFY first (ask
+    //    questions), not dump a finished plan.
+    let r1 = agent::run_turn(
+        &llm,
+        &state,
+        &mut session,
+        "Хочу в поход на байдарках с одной ночёвкой",
+        None,
+    )
+    .await
+    .expect("turn1");
+    println!("\n=== CLARIFY ===\n{}\n", r1.answer);
+    assert!(session.trip.is_some(), "flow did not start");
+    assert!(
+        r1.trace.is_empty(),
+        "should still be clarifying, no pipeline yet"
+    );
+
+    // 2. Provide the missing facts and force planning; the swarm runs and
+    //    produces a trace plus a final plan.
+    let r2 = agent::run_turn(
+        &llm,
+        &state,
+        &mut session,
+        "Старт из Москвы, в ближайшие 2 недели. Команда ленивая, любит шашлык. Поехали, планируй.",
+        None,
+    )
+    .await
+    .expect("turn2");
+    println!("\n=== TRACE ===\n{}", r2.trace.join("\n"));
+    println!("\n=== FINAL ===\n{}\n", r2.answer);
+    assert!(!r2.trace.is_empty(), "pipeline did not run");
+    assert!(session.trip.is_none(), "flow should be cleared when done");
+}
+
+#[tokio::test]
+#[ignore]
+async fn trip_swarm_supports_step_back() {
+    // The orchestrator agent must route a "change an earlier decision" message
+    // back to that stage and recompute downstream — not just append.
+    let (llm, state) = setup().await;
+    let mut session = ChatSession::new(303);
+
+    // Seed an already-planned trip mid-flow (Planning..Doc all have output),
+    // suspended at Doc, so the next message exercises a real back-step.
+    let mut trip = agent::flow::TripFlowState::start();
+    trip.brief.fields.insert("area".into(), "Москва".into());
+    trip.brief
+        .fields
+        .insert("date_window".into(), "ближайшие 2 недели".into());
+    for stage in ["Planning", "Routing", "Camp", "Schedule", "Doc"] {
+        trip.records.push(agent::flow::StageRecord {
+            stage: stage.into(),
+            output: format!("{stage} v1 (initial)"),
+        });
+    }
+    trip.stage = agent::flow::Stage::Doc;
+    session.trip = Some(trip);
+
+    // User steps back: change the date. Orchestrator should return to Planning,
+    // drop Routing..Doc, and recompute the whole downstream.
+    let r = agent::run_turn(
+        &llm,
+        &state,
+        &mut session,
+        "Давай перенесём на другой день, поищи день потеплее.",
+        None,
+    )
+    .await
+    .expect("turn");
+    println!("\n=== STEP-BACK TRACE ===\n{}", r.trace.join("\n"));
+    println!("\n=== FINAL ===\n{}\n", r.answer);
+    assert!(
+        r.trace.iter().any(|l| l.contains("Planning")),
+        "step-back did not re-run Planning"
+    );
+}

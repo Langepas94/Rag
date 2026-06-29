@@ -1,0 +1,64 @@
+{
+  "queries": [
+    {
+      "query": "How does the Telegram bot connect to MCP servers at runtime?",
+      "expected_source": "tg-agent/README.md",
+      "expected_section": "Features"
+    },
+    {
+      "query": "Which Rust module implements MCP client communication and tool calls?",
+      "expected_source": "tg-agent/src/mcp_client.rs",
+      "expected_section": "function"
+    },
+    {
+      "query": "Where is the dynamic trip-planning swarm described or implemented?",
+      "expected_source": "tg-agent/src/agent/flow.rs",
+      "expected_section": "function"
+    },
+    {
+      "query": "How are connected servers and user sessions persisted across restarts?",
+      "expected_source": "tg-agent/src/state.rs",
+      "expected_section": "function"
+    },
+    {
+      "query": "Where does the bot build prompts with profile, memory, and tool context?",
+      "expected_source": "tg-agent/src/agent/prompt.rs",
+      "expected_section": "function"
+    },
+    {
+      "query": "Which test covers the live trip planning flow?",
+      "expected_source": "tg-agent/tests/live_trip_flow.rs",
+      "expected_section": "function"
+    },
+    {
+      "query": "What Open-Meteo MCP tools are available for forecasts and weather comparison?",
+      "expected_source": "open-meteo-mcp/README.md",
+      "expected_section": "Tools"
+    },
+    {
+      "query": "Where is weather quality scoring for city comparison implemented?",
+      "expected_source": "open-meteo-mcp/src/tools/weather-logic.ts",
+      "expected_section": "function"
+    },
+    {
+      "query": "Which TypeScript tool implements compare_weather_cities or regional weather analysis?",
+      "expected_source": "open-meteo-mcp/src/tools/analyze.ts",
+      "expected_section": "function"
+    },
+    {
+      "query": "Where are scheduled weather jobs created, listed, summarized, and cancelled?",
+      "expected_source": "open-meteo-mcp/src/tools/schedule.ts",
+      "expected_section": "function"
+    },
+    {
+      "query": "Which code fetches weather forecast data from Open-Meteo APIs?",
+      "expected_source": "open-meteo-mcp/src/tools/forecast.ts",
+      "expected_section": "function"
+    },
+    {
+      "query": "Where is geocoding for city names implemented in the weather MCP server?",
+      "expected_source": "open-meteo-mcp/src/tools/geocoding.ts",
+      "expected_section": "function"
+    }
+  ]
+}
