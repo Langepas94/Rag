@@ -90,6 +90,40 @@ Use `--search-mode hybrid` to blend dense vector search with lexical matching
 over source paths, sections, and chunk text. Dense search remains the default
 because it performed best on the current qwen evaluation set.
 
+Answer with the same LLM in two modes:
+
+```bash
+.venv/bin/rag-indexer answer \
+  --index indexes-real-qwen/structural \
+  --query "How does the Telegram bot connect to MCP servers at runtime?" \
+  --mode compare \
+  --model qwen3-embedding \
+  --chat-model qwen2.5:7b
+```
+
+`--mode plain` sends only the question to the chat model. `--mode rag` performs:
+
+1. embed the question
+2. search relevant chunks in the local vector index
+3. merge ranked chunk context with the question
+4. ask the chat LLM to answer using that context
+
+Run the 10-question control set:
+
+```bash
+.venv/bin/rag-indexer evaluate-answers \
+  --index indexes-real-qwen/structural \
+  --questions evaluation/rag_control_questions.json \
+  --report reports/rag_answer_comparison.json \
+  --model qwen3-embedding \
+  --chat-model qwen2.5:7b
+```
+
+The report stores both answers for every question, retrieved sources, source
+hit@5 for RAG, and simple expectation coverage for plain vs RAG answers. A
+Telegram bot can call the same `RagAgent`/CLI contract as a client: send a user
+question with mode `plain` or `rag`, then return `answer` plus `sources`.
+
 For a smoke run without Ollama, use the deterministic hash embedder:
 
 ```bash

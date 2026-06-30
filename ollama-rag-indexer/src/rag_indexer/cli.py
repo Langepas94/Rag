@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 from typing import Optional
 
+from .agent import OllamaChatClient, RagAgent, evaluate_answers, load_control_questions
 from .embeddings import get_embedder
 from .pipeline import build_index, compare_indexes, render_markdown_report
 from .vector_store import VectorIndex
@@ -16,6 +17,8 @@ def main() -> None:
     add_build_all_parser(subparsers)
     add_compare_parser(subparsers)
     add_search_parser(subparsers)
+    add_answer_parser(subparsers)
+    add_evaluate_answers_parser(subparsers)
 
     args = parser.parse_args()
     if args.command == "build":
@@ -28,6 +31,10 @@ def main() -> None:
         run_compare(args)
     elif args.command == "search":
         run_search(args)
+    elif args.command == "answer":
+        run_answer(args)
+    elif args.command == "evaluate-answers":
+        run_evaluate_answers(args)
 
 
 def add_common_embedding_args(parser: argparse.ArgumentParser) -> None:
@@ -80,6 +87,31 @@ def add_search_parser(subparsers: argparse._SubParsersAction) -> None:
     parser.add_argument("--top-k", type=int, default=5)
     parser.add_argument("--search-mode", choices=["dense", "hybrid"], default="dense")
     add_common_embedding_args(parser)
+
+
+def add_common_agent_args(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--index", type=Path, default=Path("indexes-real-qwen/structural"))
+    parser.add_argument("--top-k", type=int, default=5)
+    parser.add_argument("--search-mode", choices=["dense", "hybrid"], default="hybrid")
+    parser.add_argument("--chat-model", default="qwen2.5:7b", help="Ollama chat model.")
+    parser.add_argument("--chat-url", default="http://localhost:11434")
+    parser.add_argument("--max-context-chars", type=int, default=8000)
+    add_common_embedding_args(parser)
+
+
+def add_answer_parser(subparsers: argparse._SubParsersAction) -> None:
+    parser = subparsers.add_parser("answer", help="Answer a question with or without RAG.")
+    parser.add_argument("--query", required=True)
+    parser.add_argument("--mode", choices=["rag", "plain", "compare"], default="compare")
+    parser.add_argument("--json", action="store_true", help="Print JSON instead of text.")
+    add_common_agent_args(parser)
+
+
+def add_evaluate_answers_parser(subparsers: argparse._SubParsersAction) -> None:
+    parser = subparsers.add_parser("evaluate-answers", help="Compare plain vs RAG answers on a control set.")
+    parser.add_argument("--questions", type=Path, default=Path("evaluation/rag_control_questions.json"))
+    parser.add_argument("--report", type=Path, default=Path("reports/rag_answer_comparison.json"))
+    add_common_agent_args(parser)
 
 
 def make_embedder(args: argparse.Namespace, default_model: Optional[str] = None):
@@ -149,6 +181,59 @@ def run_search(args: argparse.Namespace) -> None:
             )
         )
         print("    %s" % preview)
+
+
+def make_agent(args: argparse.Namespace) -> RagAgent:
+    index = VectorIndex(args.index)
+    default_model = index.manifest.get("model")
+    embedder = make_embedder(args, default_model=default_model)
+    chat_client = OllamaChatClient(model=args.chat_model, base_url=args.chat_url, timeout=args.timeout)
+    return RagAgent(
+        chat_client=chat_client,
+        embedder=embedder,
+        index=index,
+        top_k=args.top_k,
+        search_mode=args.search_mode,
+        max_context_chars=args.max_context_chars,
+    )
+
+
+def run_answer(args: argparse.Namespace) -> None:
+    agent = make_agent(args)
+    if args.mode == "compare":
+        payload = agent.compare(args.query)
+    else:
+        payload = agent.answer(args.query, use_rag=args.mode == "rag").to_json()
+
+    if args.json:
+        print(json.dumps(payload, ensure_ascii=False, indent=2))
+        return
+
+    if args.mode == "compare":
+        print("Question: %s" % payload["question"])
+        print("\n--- Without RAG ---\n%s" % payload["plain"]["answer"])
+        print("\n--- With RAG ---\n%s" % payload["rag"]["answer"])
+        print("\nSources:")
+        for source in payload["rag"]["sources"]:
+            print("[%d] %s / %s score=%.4f" % (source["rank"], source["source"], source["section"], source["score"]))
+    else:
+        print(payload["answer"])
+        if payload["sources"]:
+            print("\nSources:")
+            for source in payload["sources"]:
+                print("[%d] %s / %s score=%.4f" % (source["rank"], source["source"], source["section"], source["score"]))
+
+
+def run_evaluate_answers(args: argparse.Namespace) -> None:
+    agent = make_agent(args)
+    questions = load_control_questions(args.questions)
+    report = evaluate_answers(agent, questions)
+    args.report.parent.mkdir(parents=True, exist_ok=True)
+    args.report.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print("Wrote %s" % args.report)
+    print("RAG source hit@5: %s" % report["summary"]["rag_source_hit_at_5"])
+    print("Plain expectation coverage: %s" % report["summary"]["plain_expectation_coverage"])
+    print("RAG expectation coverage: %s" % report["summary"]["rag_expectation_coverage"])
 
 
 def model_from_first_manifest(index_root: Path, strategies) -> Optional[str]:

@@ -1,0 +1,64 @@
+{
+  "queries": [
+    {
+      "query": "How does the Telegram bot connect to MCP servers at runtime?",
+      "expectation": "The answer should mention /connect, HTTP Streamable transport, stdio child process transport, and the mcp_connect meta-tool for self-connect.",
+      "expected_contains": ["/connect", "HTTP", "stdio", "mcp_connect"],
+      "expected_sources": ["tg-agent/README.md", "tg-agent/AGENTS.md", "tg-agent/src/llm.rs", "tg-agent/src/mcp_client.rs"]
+    },
+    {
+      "query": "Which Rust module implements MCP client communication and tool calls?",
+      "expectation": "The answer should identify src/mcp_client.rs as the MCP client layer and connect it with ConnectParams/connect transports.",
+      "expected_contains": ["src/mcp_client.rs", "ConnectParams", "connect"],
+      "expected_sources": ["tg-agent/src/mcp_client.rs"]
+    },
+    {
+      "query": "Where is the dynamic trip-planning swarm described or implemented?",
+      "expectation": "The answer should point to src/agent/flow.rs and mention the trip-planning swarm with planner, worker, verifier, artifacts, and final agents.",
+      "expected_contains": ["src/agent/flow.rs", "swarm", "VerifierAgent", "ArtifactsAgent"],
+      "expected_sources": ["tg-agent/src/agent/flow.rs", "tg-agent/README.md", "tg-agent/tests/live_trip_flow.rs"]
+    },
+    {
+      "query": "How are connected servers and user sessions persisted across restarts?",
+      "expectation": "The answer should mention persistence of connected servers/sessions and point to state.rs and persist.rs.",
+      "expected_contains": ["connected servers", "sessions", "state.rs", "persist.rs"],
+      "expected_sources": ["tg-agent/src/state.rs", "tg-agent/src/persist.rs", "tg-agent/README.md"]
+    },
+    {
+      "query": "Where does the bot build prompts with profile, memory, and tool context?",
+      "expectation": "The answer should identify src/agent/prompt.rs and PromptBuilder or build_system_prompt as the prompt assembly layer.",
+      "expected_contains": ["src/agent/prompt.rs", "PromptBuilder", "profile", "memory"],
+      "expected_sources": ["tg-agent/src/agent/prompt.rs", "tg-agent/src/llm.rs"]
+    },
+    {
+      "query": "Which test covers the live trip planning flow?",
+      "expectation": "The answer should name tests/live_trip_flow.rs and describe it as the ignored/live trip flow test.",
+      "expected_contains": ["tests/live_trip_flow.rs", "live", "trip"],
+      "expected_sources": ["tg-agent/tests/live_trip_flow.rs", "tg-agent/tests/live_orchestrator.rs"]
+    },
+    {
+      "query": "What Open-Meteo MCP tools are available for forecasts and weather comparison?",
+      "expectation": "The answer should mention forecast/weather tools and compare_weather_cities or regional weather analysis from the Open-Meteo MCP server.",
+      "expected_contains": ["forecast", "compare_weather_cities", "weather", "Open-Meteo"],
+      "expected_sources": ["open-meteo-mcp/README.md", "open-meteo-mcp/src/index.ts"]
+    },
+    {
+      "query": "Where is weather quality scoring for city comparison implemented?",
+      "expectation": "The answer should point to weather-logic.ts and analyze.ts and mention scoring/ranking city weather.",
+      "expected_contains": ["weather-logic.ts", "analyze.ts", "score"],
+      "expected_sources": ["open-meteo-mcp/src/tools/weather-logic.ts", "open-meteo-mcp/src/tools/analyze.ts"]
+    },
+    {
+      "query": "Where are scheduled weather jobs created, listed, summarized, and cancelled?",
+      "expectation": "The answer should point to schedule.ts and scheduler.ts and mention creating/listing/cancelling scheduled collection jobs.",
+      "expected_contains": ["schedule.ts", "scheduler.ts", "created", "cancelled"],
+      "expected_sources": ["open-meteo-mcp/src/tools/schedule.ts", "open-meteo-mcp/src/scheduler.ts", "open-meteo-mcp/README.md"]
+    },
+    {
+      "query": "Where is geocoding for city names implemented in the weather MCP server?",
+      "expectation": "The answer should identify geocoding.ts and describe city-name lookup/geocode support.",
+      "expected_contains": ["geocoding.ts", "city", "geocode"],
+      "expected_sources": ["open-meteo-mcp/src/tools/geocoding.ts", "open-meteo-mcp/README.md"]
+    }
+  ]
+}
