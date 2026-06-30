@@ -1,23 +1,23 @@
 {
-  "created_at": "2026-06-29T17:37:13Z",
+  "created_at": "2026-06-30T09:00:05Z",
   "strategy": "fixed",
   "embedder": "ollama",
   "model": "qwen3-embedding",
   "corpus_dir": "corpus-real",
-  "document_count": 36,
-  "estimated_pages": 127.33,
-  "text_characters": 381995,
+  "document_count": 37,
+  "estimated_pages": 128.46,
+  "text_characters": 385392,
   "chunk_settings": {
     "max_chars": 1200,
     "overlap": 180
   },
   "stats": {
-    "chunks": 387,
-    "avg_chars": 1146.12,
+    "chunks": 391,
+    "avg_chars": 1144.45,
     "min_chars": 238,
     "max_chars": 1199,
-    "avg_tokens_estimate": 329.46,
-    "with_section": 387,
+    "avg_tokens_estimate": 329.13,
+    "with_section": 391,
     "with_section_ratio": 1.0,
     "chunks_per_source": {
       "open-meteo-mcp/README.md": 4,
@@ -51,6 +51,7 @@
       "tg-agent/src/llm.rs": 49,
       "tg-agent/src/main.rs": 4,
       "tg-agent/src/mcp_client.rs": 12,
+      "tg-agent/src/persist.rs": 4,
       "tg-agent/src/scheduler.rs": 3,
       "tg-agent/src/state.rs": 26,
       "tg-agent/tests/live_connect.rs": 3,
@@ -59,7 +60,7 @@
     }
   },
   "backend": "faiss",
-  "chunk_count": 387,
+  "chunk_count": 391,
   "dimension": 4096,
   "files": {
     "chunks": "chunks.jsonl",

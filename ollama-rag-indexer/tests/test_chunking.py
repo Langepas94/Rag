@@ -51,3 +51,36 @@ def test_structural_chunking_finds_top_level_code_symbols() -> None:
     assert "class Store" in sections
     assert "function build_index" in sections
 
+
+def test_structural_chunking_finds_rust_symbols() -> None:
+    doc = Document(
+        source="mcp_client.rs",
+        title="mcp_client.rs",
+        kind="code",
+        language="rust",
+        text="pub struct McpClient {}\n\nimpl McpClient {\n    pub async fn call_tool(&self) {}\n}\n\npub enum Transport { Http }\n",
+    )
+
+    chunks = structural_chunk_documents([doc], max_chars=300, overlap=20)
+    sections = [chunk.section for chunk in chunks]
+
+    assert "struct McpClient" in sections
+    assert "impl McpClient" in sections
+    assert "enum Transport" in sections
+
+
+def test_structural_chunking_finds_typescript_symbols() -> None:
+    doc = Document(
+        source="tools/analyze.ts",
+        title="analyze.ts",
+        kind="code",
+        language="typescript",
+        text="export interface CityScore {}\n\nexport const compareWeatherCities = () => true;\n\nexport function registerAnalyzeTools() {}\n",
+    )
+
+    chunks = structural_chunk_documents([doc], max_chars=300, overlap=20)
+    sections = [chunk.section for chunk in chunks]
+
+    assert "interface CityScore" in sections
+    assert "function compareWeatherCities" in sections
+    assert "function registerAnalyzeTools" in sections

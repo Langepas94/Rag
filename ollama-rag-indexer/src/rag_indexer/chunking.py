@@ -117,14 +117,7 @@ def text_sections(document: Document) -> List[Section]:
 
 
 def code_sections(document: Document) -> List[Section]:
-    pattern = re.compile(
-        r"^(?P<indent>[ \t]*)(?:(?:async\s+)?def\s+(?P<py_fn>[A-Za-z_][A-Za-z0-9_]*)|"
-        r"class\s+(?P<py_class>[A-Za-z_][A-Za-z0-9_]*)|"
-        r"function\s+(?P<js_fn>[A-Za-z_][A-Za-z0-9_]*)|"
-        r"export\s+function\s+(?P<js_export>[A-Za-z_][A-Za-z0-9_]*)|"
-        r"const\s+(?P<js_const>[A-Za-z_][A-Za-z0-9_]*)\s*=)",
-        flags=re.MULTILINE,
-    )
+    pattern = code_symbol_pattern(document.language)
     matches = [match for match in pattern.finditer(document.text) if len(match.group("indent")) == 0]
     if not matches:
         return [(document.section or document.title, document.text, 0, len(document.text))]
@@ -137,10 +130,67 @@ def code_sections(document: Document) -> List[Section]:
     for index, match in enumerate(matches):
         start = match.start()
         end = matches[index + 1].start() if index + 1 < len(matches) else len(document.text)
-        name = next(value for key, value in match.groupdict().items() if key != "indent" and value)
-        kind = "class" if match.group("py_class") else "function"
+        kind, name = code_symbol_name(match)
         sections.append(("%s %s" % (kind, name), document.text[start:end].strip(), start, end))
     return sections
+
+
+def code_symbol_pattern(language: str) -> re.Pattern:
+    if language == "rust":
+        return re.compile(
+            r"^(?P<indent>[ \t]*)(?:"
+            r"(?:pub(?:\([^)]*\))?\s+)?(?:async\s+)?fn\s+(?P<rust_fn>[A-Za-z_][A-Za-z0-9_]*)|"
+            r"(?:pub(?:\([^)]*\))?\s+)?struct\s+(?P<rust_struct>[A-Za-z_][A-Za-z0-9_]*)|"
+            r"(?:pub(?:\([^)]*\))?\s+)?enum\s+(?P<rust_enum>[A-Za-z_][A-Za-z0-9_]*)|"
+            r"(?:pub(?:\([^)]*\))?\s+)?trait\s+(?P<rust_trait>[A-Za-z_][A-Za-z0-9_]*)|"
+            r"impl(?:\s*<[^>]+>)?\s+(?P<rust_impl>[A-Za-z_][A-Za-z0-9_:<>]*)|"
+            r"(?:pub(?:\([^)]*\))?\s+)?mod\s+(?P<rust_mod>[A-Za-z_][A-Za-z0-9_]*)"
+            r")",
+            flags=re.MULTILINE,
+        )
+    if language in {"typescript", "javascript"}:
+        return re.compile(
+            r"^(?P<indent>[ \t]*)(?:"
+            r"(?:export\s+)?(?:async\s+)?function\s+(?P<ts_fn>[A-Za-z_][A-Za-z0-9_]*)|"
+            r"(?:export\s+)?(?:const|let|var)\s+(?P<ts_const>[A-Za-z_][A-Za-z0-9_]*)\s*=|"
+            r"(?:export\s+)?class\s+(?P<ts_class>[A-Za-z_][A-Za-z0-9_]*)|"
+            r"(?:export\s+)?interface\s+(?P<ts_interface>[A-Za-z_][A-Za-z0-9_]*)|"
+            r"(?:export\s+)?type\s+(?P<ts_type>[A-Za-z_][A-Za-z0-9_]*)\s*="
+            r")",
+            flags=re.MULTILINE,
+        )
+    return re.compile(
+        r"^(?P<indent>[ \t]*)(?:(?:async\s+)?def\s+(?P<py_fn>[A-Za-z_][A-Za-z0-9_]*)|"
+        r"class\s+(?P<py_class>[A-Za-z_][A-Za-z0-9_]*)|"
+        r"function\s+(?P<js_fn>[A-Za-z_][A-Za-z0-9_]*)|"
+        r"export\s+function\s+(?P<js_export>[A-Za-z_][A-Za-z0-9_]*)|"
+        r"const\s+(?P<js_const>[A-Za-z_][A-Za-z0-9_]*)\s*=)",
+        flags=re.MULTILINE,
+    )
+
+
+def code_symbol_name(match: re.Match) -> Tuple[str, str]:
+    for key, value in match.groupdict().items():
+        if key == "indent" or not value:
+            continue
+        if key.endswith("class"):
+            return "class", value
+        if key.endswith("struct"):
+            return "struct", value
+        if key.endswith("enum"):
+            return "enum", value
+        if key.endswith("trait"):
+            return "trait", value
+        if key.endswith("impl"):
+            return "impl", value
+        if key.endswith("mod"):
+            return "module", value
+        if key.endswith("interface"):
+            return "interface", value
+        if key.endswith("type"):
+            return "type", value
+        return "function", value
+    return "section", "unknown"
 
 
 def section_positions(document: Document) -> List[Tuple[int, str]]:

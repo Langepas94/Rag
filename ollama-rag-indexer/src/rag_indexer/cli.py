@@ -67,6 +67,7 @@ def add_compare_parser(subparsers: argparse._SubParsersAction) -> None:
     parser.add_argument("--strategies", default="fixed,structural")
     parser.add_argument("--queries", type=Path, default=None)
     parser.add_argument("--top-k", type=int, default=5)
+    parser.add_argument("--search-mode", choices=["dense", "hybrid"], default="dense")
     parser.add_argument("--report", type=Path, default=Path("reports/chunking_comparison.md"))
     parser.add_argument("--json-report", type=Path, default=Path("reports/chunking_comparison.json"))
     add_common_embedding_args(parser)
@@ -77,6 +78,7 @@ def add_search_parser(subparsers: argparse._SubParsersAction) -> None:
     parser.add_argument("--index", type=Path, required=True)
     parser.add_argument("--query", required=True)
     parser.add_argument("--top-k", type=int, default=5)
+    parser.add_argument("--search-mode", choices=["dense", "hybrid"], default="dense")
     add_common_embedding_args(parser)
 
 
@@ -115,6 +117,7 @@ def run_compare(args: argparse.Namespace) -> None:
         embedder=embedder,
         queries_path=args.queries,
         top_k=args.top_k,
+        search_mode=args.search_mode,
     )
     args.report.parent.mkdir(parents=True, exist_ok=True)
     args.json_report.parent.mkdir(parents=True, exist_ok=True)
@@ -129,11 +132,22 @@ def run_search(args: argparse.Namespace) -> None:
     default_model = index.manifest.get("model")
     embedder = make_embedder(args, default_model=default_model)
     vector = embedder.embed([args.query])
-    results = index.search(vector, top_k=args.top_k)
+    results = index.search(vector, top_k=args.top_k, mode=args.search_mode, query_text=args.query)
     for rank, result in enumerate(results, start=1):
         chunk = result.chunk
         preview = " ".join(str(chunk.get("text", "")).split())[:260]
-        print("[%d] score=%.4f source=%s section=%s chunk_id=%s" % (rank, result.score, chunk.get("source"), chunk.get("section"), chunk.get("chunk_id")))
+        print(
+            "[%d] score=%.4f dense=%.4f lexical=%.4f source=%s section=%s chunk_id=%s"
+            % (
+                rank,
+                result.score,
+                result.dense_score,
+                result.lexical_score or 0.0,
+                chunk.get("source"),
+                chunk.get("section"),
+                chunk.get("chunk_id"),
+            )
+        )
         print("    %s" % preview)
 
 
@@ -148,4 +162,3 @@ def model_from_first_manifest(index_root: Path, strategies) -> Optional[str]:
 
 if __name__ == "__main__":
     main()
-

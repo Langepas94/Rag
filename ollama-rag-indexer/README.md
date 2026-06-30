@@ -57,6 +57,26 @@ Compare the strategies:
   --model qwen3-embedding
 ```
 
+For the real `tg-agent` + `open-meteo-mcp` corpus:
+
+```bash
+.venv/bin/rag-indexer build-all \
+  --corpus corpus-real \
+  --out indexes-real-qwen \
+  --model qwen3-embedding \
+  --batch-size 4 \
+  --timeout 600
+
+.venv/bin/rag-indexer compare \
+  --index-root indexes-real-qwen \
+  --queries evaluation/real_project_queries.json \
+  --model qwen3-embedding \
+  --batch-size 4 \
+  --timeout 600 \
+  --search-mode dense \
+  --report reports/real_qwen_chunking_comparison.md
+```
+
 Search:
 
 ```bash
@@ -65,6 +85,10 @@ Search:
   --query "How should metadata be attached to each chunk?" \
   --model qwen3-embedding
 ```
+
+Use `--search-mode hybrid` to blend dense vector search with lexical matching
+over source paths, sections, and chunk text. Dense search remains the default
+because it performed best on the current qwen evaluation set.
 
 For a smoke run without Ollama, use the deterministic hash embedder:
 

@@ -2,63 +2,155 @@
   "queries": [
     {
       "query": "How does the Telegram bot connect to MCP servers at runtime?",
-      "expected_source": "tg-agent/README.md",
-      "expected_section": "Features"
+      "expected_sources": [
+        "tg-agent/README.md",
+        "tg-agent/AGENTS.md",
+        "tg-agent/CLAUDE.md",
+        "tg-agent/src/llm.rs",
+        "tg-agent/src/mcp_client.rs"
+      ],
+      "expected_sections": [
+        "tg-agent",
+        "Runtime MCP management",
+        "Self-connect",
+        "mcp_connect"
+      ]
     },
     {
       "query": "Which Rust module implements MCP client communication and tool calls?",
-      "expected_source": "tg-agent/src/mcp_client.rs",
-      "expected_section": "function"
+      "expected_sources": [
+        "tg-agent/src/mcp_client.rs",
+        "tg-agent/tests/live_connect.rs"
+      ],
+      "expected_sections": [
+        "mcp_client.rs",
+        "function",
+        "struct"
+      ]
     },
     {
       "query": "Where is the dynamic trip-planning swarm described or implemented?",
-      "expected_source": "tg-agent/src/agent/flow.rs",
-      "expected_section": "function"
+      "expected_sources": [
+        "tg-agent/src/agent/flow.rs",
+        "tg-agent/README.md",
+        "tg-agent/tests/live_trip_flow.rs"
+      ],
+      "expected_sections": [
+        "flow.rs",
+        "trip",
+        "swarm",
+        "function"
+      ]
     },
     {
       "query": "How are connected servers and user sessions persisted across restarts?",
-      "expected_source": "tg-agent/src/state.rs",
-      "expected_section": "function"
+      "expected_sources": [
+        "tg-agent/src/state.rs",
+        "tg-agent/src/persist.rs",
+        "tg-agent/README.md"
+      ],
+      "expected_sections": [
+        "state.rs",
+        "Persistence",
+        "function"
+      ]
     },
     {
       "query": "Where does the bot build prompts with profile, memory, and tool context?",
-      "expected_source": "tg-agent/src/agent/prompt.rs",
-      "expected_section": "function"
+      "expected_sources": [
+        "tg-agent/src/agent/prompt.rs",
+        "tg-agent/src/llm.rs"
+      ],
+      "expected_sections": [
+        "prompt.rs",
+        "PromptBuilder",
+        "function"
+      ]
     },
     {
       "query": "Which test covers the live trip planning flow?",
-      "expected_source": "tg-agent/tests/live_trip_flow.rs",
-      "expected_section": "function"
+      "expected_sources": [
+        "tg-agent/tests/live_trip_flow.rs",
+        "tg-agent/tests/live_orchestrator.rs"
+      ],
+      "expected_sections": [
+        "live_trip_flow.rs",
+        "function"
+      ]
     },
     {
       "query": "What Open-Meteo MCP tools are available for forecasts and weather comparison?",
-      "expected_source": "open-meteo-mcp/README.md",
-      "expected_section": "Tools"
+      "expected_sources": [
+        "open-meteo-mcp/README.md",
+        "open-meteo-mcp/src/index.ts"
+      ],
+      "expected_sections": [
+        "Tools",
+        "Weather data",
+        "Weather comparison"
+      ]
     },
     {
       "query": "Where is weather quality scoring for city comparison implemented?",
-      "expected_source": "open-meteo-mcp/src/tools/weather-logic.ts",
-      "expected_section": "function"
+      "expected_sources": [
+        "open-meteo-mcp/src/tools/weather-logic.ts",
+        "open-meteo-mcp/src/tools/analyze.ts"
+      ],
+      "expected_sections": [
+        "weather-logic.ts",
+        "function",
+        "score"
+      ]
     },
     {
       "query": "Which TypeScript tool implements compare_weather_cities or regional weather analysis?",
-      "expected_source": "open-meteo-mcp/src/tools/analyze.ts",
-      "expected_section": "function"
+      "expected_sources": [
+        "open-meteo-mcp/src/tools/analyze.ts",
+        "open-meteo-mcp/README.md"
+      ],
+      "expected_sections": [
+        "analyze.ts",
+        "Weather comparison",
+        "function"
+      ]
     },
     {
       "query": "Where are scheduled weather jobs created, listed, summarized, and cancelled?",
-      "expected_source": "open-meteo-mcp/src/tools/schedule.ts",
-      "expected_section": "function"
+      "expected_sources": [
+        "open-meteo-mcp/src/tools/schedule.ts",
+        "open-meteo-mcp/README.md",
+        "open-meteo-mcp/src/scheduler.ts"
+      ],
+      "expected_sections": [
+        "schedule.ts",
+        "Scheduled collection",
+        "function"
+      ]
     },
     {
       "query": "Which code fetches weather forecast data from Open-Meteo APIs?",
-      "expected_source": "open-meteo-mcp/src/tools/forecast.ts",
-      "expected_section": "function"
+      "expected_sources": [
+        "open-meteo-mcp/src/tools/forecast.ts",
+        "open-meteo-mcp/src/client.ts",
+        "open-meteo-mcp/README.md"
+      ],
+      "expected_sections": [
+        "forecast.ts",
+        "Weather data",
+        "function"
+      ]
     },
     {
       "query": "Where is geocoding for city names implemented in the weather MCP server?",
-      "expected_source": "open-meteo-mcp/src/tools/geocoding.ts",
-      "expected_section": "function"
+      "expected_sources": [
+        "open-meteo-mcp/src/tools/geocoding.ts",
+        "open-meteo-mcp/README.md"
+      ],
+      "expected_sections": [
+        "geocoding.ts",
+        "geocode",
+        "function"
+      ]
     }
   ]
 }

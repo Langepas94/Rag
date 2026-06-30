@@ -1,0 +1,2096 @@
+{
+  "created_at": "2026-06-30T09:13:03Z",
+  "search_mode": "hybrid",
+  "strategies": {
+    "fixed": {
+      "manifest": {
+        "created_at": "2026-06-30T09:00:05Z",
+        "strategy": "fixed",
+        "embedder": "ollama",
+        "model": "qwen3-embedding",
+        "corpus_dir": "corpus-real",
+        "document_count": 37,
+        "estimated_pages": 128.46,
+        "text_characters": 385392,
+        "chunk_settings": {
+          "max_chars": 1200,
+          "overlap": 180
+        },
+        "stats": {
+          "chunks": 391,
+          "avg_chars": 1144.45,
+          "min_chars": 238,
+          "max_chars": 1199,
+          "avg_tokens_estimate": 329.13,
+          "with_section": 391,
+          "with_section_ratio": 1.0,
+          "chunks_per_source": {
+            "open-meteo-mcp/README.md": 4,
+            "open-meteo-mcp/src/client.ts": 1,
+            "open-meteo-mcp/src/index.ts": 4,
+            "open-meteo-mcp/src/notifications.ts": 3,
+            "open-meteo-mcp/src/scheduler.ts": 2,
+            "open-meteo-mcp/src/summarize.ts": 3,
+            "open-meteo-mcp/src/tools/air-quality.ts": 2,
+            "open-meteo-mcp/src/tools/analyze.ts": 13,
+            "open-meteo-mcp/src/tools/forecast.ts": 5,
+            "open-meteo-mcp/src/tools/geocoding.ts": 2,
+            "open-meteo-mcp/src/tools/marine.ts": 2,
+            "open-meteo-mcp/src/tools/schedule.ts": 8,
+            "open-meteo-mcp/src/tools/weather-logic.ts": 8,
+            "open-meteo-mcp/tests/analyze.test.ts": 4,
+            "open-meteo-mcp/tests/client.test.ts": 3,
+            "open-meteo-mcp/tests/scheduler.test.ts": 2,
+            "tg-agent/AGENTS.md": 6,
+            "tg-agent/CLAUDE.md": 6,
+            "tg-agent/README.md": 4,
+            "tg-agent/src/agent/flow.rs": 86,
+            "tg-agent/src/agent/memory.rs": 17,
+            "tg-agent/src/agent/mod.rs": 12,
+            "tg-agent/src/agent/profile.rs": 9,
+            "tg-agent/src/agent/prompt.rs": 8,
+            "tg-agent/src/agent/router.rs": 5,
+            "tg-agent/src/agent/session.rs": 3,
+            "tg-agent/src/bot.rs": 43,
+            "tg-agent/src/config.rs": 3,
+            "tg-agent/src/llm.rs": 49,
+            "tg-agent/src/main.rs": 4,
+            "tg-agent/src/mcp_client.rs": 12,
+            "tg-agent/src/persist.rs": 4,
+            "tg-agent/src/scheduler.rs": 3,
+            "tg-agent/src/state.rs": 26,
+            "tg-agent/tests/live_connect.rs": 3,
+            "tg-agent/tests/live_orchestrator.rs": 8,
+            "tg-agent/tests/live_trip_flow.rs": 14
+          }
+        },
+        "backend": "faiss",
+        "chunk_count": 391,
+        "dimension": 4096,
+        "files": {
+          "chunks": "chunks.jsonl",
+          "vectors": "vectors.npy",
+          "faiss": "index.faiss"
+        }
+      },
+      "stats": {
+        "chunks": 391,
+        "avg_chars": 1144.45,
+        "min_chars": 238,
+        "max_chars": 1199,
+        "avg_tokens_estimate": 329.13,
+        "with_section": 391,
+        "with_section_ratio": 1.0,
+        "chunks_per_source": {
+          "open-meteo-mcp/README.md": 4,
+          "open-meteo-mcp/src/client.ts": 1,
+          "open-meteo-mcp/src/index.ts": 4,
+          "open-meteo-mcp/src/notifications.ts": 3,
+          "open-meteo-mcp/src/scheduler.ts": 2,
+          "open-meteo-mcp/src/summarize.ts": 3,
+          "open-meteo-mcp/src/tools/air-quality.ts": 2,
+          "open-meteo-mcp/src/tools/analyze.ts": 13,
+          "open-meteo-mcp/src/tools/forecast.ts": 5,
+          "open-meteo-mcp/src/tools/geocoding.ts": 2,
+          "open-meteo-mcp/src/tools/marine.ts": 2,
+          "open-meteo-mcp/src/tools/schedule.ts": 8,
+          "open-meteo-mcp/src/tools/weather-logic.ts": 8,
+          "open-meteo-mcp/tests/analyze.test.ts": 4,
+          "open-meteo-mcp/tests/client.test.ts": 3,
+          "open-meteo-mcp/tests/scheduler.test.ts": 2,
+          "tg-agent/AGENTS.md": 6,
+          "tg-agent/CLAUDE.md": 6,
+          "tg-agent/README.md": 4,
+          "tg-agent/src/agent/flow.rs": 86,
+          "tg-agent/src/agent/memory.rs": 17,
+          "tg-agent/src/agent/mod.rs": 12,
+          "tg-agent/src/agent/profile.rs": 9,
+          "tg-agent/src/agent/prompt.rs": 8,
+          "tg-agent/src/agent/router.rs": 5,
+          "tg-agent/src/agent/session.rs": 3,
+          "tg-agent/src/bot.rs": 43,
+          "tg-agent/src/config.rs": 3,
+          "tg-agent/src/llm.rs": 49,
+          "tg-agent/src/main.rs": 4,
+          "tg-agent/src/mcp_client.rs": 12,
+          "tg-agent/src/persist.rs": 4,
+          "tg-agent/src/scheduler.rs": 3,
+          "tg-agent/src/state.rs": 26,
+          "tg-agent/tests/live_connect.rs": 3,
+          "tg-agent/tests/live_orchestrator.rs": 8,
+          "tg-agent/tests/live_trip_flow.rs": 14
+        }
+      },
+      "retrieval": {
+        "query_count": 12,
+        "source_hit_at_1": 0.8333,
+        "source_hit_at_3": 1.0,
+        "source_hit_at_5": 1.0,
+        "section_hit_at_1": 0.3333,
+        "section_hit_at_3": 0.75,
+        "section_hit_at_5": 0.9167,
+        "mrr_source": 0.9167,
+        "rows": [
+          {
+            "query": "How does the Telegram bot connect to MCP servers at runtime?",
+            "expected_sources": [
+              "tg-agent/README.md",
+              "tg-agent/AGENTS.md",
+              "tg-agent/CLAUDE.md",
+              "tg-agent/src/llm.rs",
+              "tg-agent/src/mcp_client.rs"
+            ],
+            "expected_sections": [
+              "tg-agent",
+              "Runtime MCP management",
+              "Self-connect",
+              "mcp_connect"
+            ],
+            "source_rank": 1,
+            "section_rank": 1,
+            "source_hit_at_1": 1,
+            "source_hit_at_3": 1,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 1,
+            "section_hit_at_3": 1,
+            "section_hit_at_5": 1,
+            "has_expected_section": true,
+            "mrr_source": 1.0,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 1.0,
+                "dense_score": 0.8562,
+                "lexical_score": 19.6772,
+                "source": "tg-agent/README.md",
+                "section": "tg-agent",
+                "chunk_id": "fixed:50184eaf77:00078"
+              },
+              {
+                "rank": 2,
+                "score": 0.8633,
+                "dense_score": 0.7951,
+                "lexical_score": 9.7128,
+                "source": "tg-agent/AGENTS.md",
+                "section": "tg-agent — Codex context",
+                "chunk_id": "fixed:3331d4e18e:00066"
+              },
+              {
+                "rank": 3,
+                "score": 0.8633,
+                "dense_score": 0.7951,
+                "lexical_score": 9.7128,
+                "source": "tg-agent/CLAUDE.md",
+                "section": "tg-agent — Codex context",
+                "chunk_id": "fixed:75fb1ca9b6:00072"
+              },
+              {
+                "rank": 4,
+                "score": 0.8256,
+                "dense_score": 0.7433,
+                "lexical_score": 11.5055,
+                "source": "tg-agent/src/mcp_client.rs",
+                "section": "enum McpEvent",
+                "chunk_id": "fixed:4c96fc4327:00322"
+              },
+              {
+                "rank": 5,
+                "score": 0.7793,
+                "dense_score": 0.7251,
+                "lexical_score": 7.8052,
+                "source": "tg-agent/src/agent/prompt.rs",
+                "section": "file prelude",
+                "chunk_id": "fixed:3b7287a074:00207"
+              }
+            ]
+          },
+          {
+            "query": "Which Rust module implements MCP client communication and tool calls?",
+            "expected_sources": [
+              "tg-agent/src/mcp_client.rs",
+              "tg-agent/tests/live_connect.rs"
+            ],
+            "expected_sections": [
+              "mcp_client.rs",
+              "function",
+              "struct"
+            ],
+            "source_rank": 1,
+            "section_rank": null,
+            "source_hit_at_1": 1,
+            "source_hit_at_3": 1,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 0,
+            "section_hit_at_3": 0,
+            "section_hit_at_5": 0,
+            "has_expected_section": true,
+            "mrr_source": 1.0,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 0.9631,
+                "dense_score": 0.7227,
+                "lexical_score": 8.2845,
+                "source": "tg-agent/tests/live_connect.rs",
+                "section": "file prelude",
+                "chunk_id": "fixed:ae326e69c5:00366"
+              },
+              {
+                "rank": 2,
+                "score": 0.8971,
+                "dense_score": 0.6836,
+                "lexical_score": 6.8196,
+                "source": "tg-agent/src/state.rs",
+                "section": "impl BotState",
+                "chunk_id": "fixed:c77b1ee4cc:00353"
+              },
+              {
+                "rank": 3,
+                "score": 0.8957,
+                "dense_score": 0.6401,
+                "lexical_score": 10.4642,
+                "source": "tg-agent/src/mcp_client.rs",
+                "section": "file prelude",
+                "chunk_id": "fixed:4c96fc4327:00321"
+              },
+              {
+                "rank": 4,
+                "score": 0.8793,
+                "dense_score": 0.6573,
+                "lexical_score": 7.7762,
+                "source": "tg-agent/src/mcp_client.rs",
+                "section": "impl McpClient",
+                "chunk_id": "fixed:4c96fc4327:00330"
+              },
+              {
+                "rank": 5,
+                "score": 0.8768,
+                "dense_score": 0.621,
+                "lexical_score": 10.7219,
+                "source": "tg-agent/src/mcp_client.rs",
+                "section": "enum McpEvent",
+                "chunk_id": "fixed:4c96fc4327:00322"
+              }
+            ]
+          },
+          {
+            "query": "Where is the dynamic trip-planning swarm described or implemented?",
+            "expected_sources": [
+              "tg-agent/src/agent/flow.rs",
+              "tg-agent/README.md",
+              "tg-agent/tests/live_trip_flow.rs"
+            ],
+            "expected_sections": [
+              "flow.rs",
+              "trip",
+              "swarm",
+              "function"
+            ],
+            "source_rank": 1,
+            "section_rank": 2,
+            "source_hit_at_1": 1,
+            "source_hit_at_3": 1,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 0,
+            "section_hit_at_3": 1,
+            "section_hit_at_5": 1,
+            "has_expected_section": true,
+            "mrr_source": 1.0,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 0.9216,
+                "dense_score": 0.6923,
+                "lexical_score": 14.1878,
+                "source": "tg-agent/src/agent/flow.rs",
+                "section": "file prelude",
+                "chunk_id": "fixed:0fdbbbed0e:00082"
+              },
+              {
+                "rank": 2,
+                "score": 0.8957,
+                "dense_score": 0.7469,
+                "lexical_score": 4.8472,
+                "source": "tg-agent/src/agent/flow.rs",
+                "section": "function agent_model_env_key",
+                "chunk_id": "fixed:0fdbbbed0e:00107"
+              },
+              {
+                "rank": 3,
+                "score": 0.8795,
+                "dense_score": 0.6915,
+                "lexical_score": 9.8159,
+                "source": "tg-agent/src/agent/flow.rs",
+                "section": "function agent_model_env_key",
+                "chunk_id": "fixed:0fdbbbed0e:00109"
+              },
+              {
+                "rank": 4,
+                "score": 0.8609,
+                "dense_score": 0.7137,
+                "lexical_score": 5.1628,
+                "source": "tg-agent/src/agent/flow.rs",
+                "section": "function agent_model_env_key",
+                "chunk_id": "fixed:0fdbbbed0e:00108"
+              },
+              {
+                "rank": 5,
+                "score": 0.8599,
+                "dense_score": 0.6765,
+                "lexical_score": 9.5515,
+                "source": "tg-agent/tests/live_orchestrator.rs",
+                "section": "function trip_swarm_clarifies_then_plans",
+                "chunk_id": "fixed:5c24861cd6:00374"
+              }
+            ]
+          },
+          {
+            "query": "How are connected servers and user sessions persisted across restarts?",
+            "expected_sources": [
+              "tg-agent/src/state.rs",
+              "tg-agent/src/persist.rs",
+              "tg-agent/README.md"
+            ],
+            "expected_sections": [
+              "state.rs",
+              "Persistence",
+              "function"
+            ],
+            "source_rank": 1,
+            "section_rank": 3,
+            "source_hit_at_1": 1,
+            "source_hit_at_3": 1,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 0,
+            "section_hit_at_3": 1,
+            "section_hit_at_5": 1,
+            "has_expected_section": true,
+            "mrr_source": 1.0,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 0.9554,
+                "dense_score": 0.564,
+                "lexical_score": 10.0112,
+                "source": "tg-agent/src/state.rs",
+                "section": "impl BotState",
+                "chunk_id": "fixed:c77b1ee4cc:00350"
+              },
+              {
+                "rank": 2,
+                "score": 0.955,
+                "dense_score": 0.5341,
+                "lexical_score": 14.2534,
+                "source": "tg-agent/README.md",
+                "section": "Features",
+                "chunk_id": "fixed:50184eaf77:00080"
+              },
+              {
+                "rank": 3,
+                "score": 0.913,
+                "dense_score": 0.5369,
+                "lexical_score": 9.8734,
+                "source": "tg-agent/tests/live_connect.rs",
+                "section": "function registry_keeps_connection_across_calls",
+                "chunk_id": "fixed:ae326e69c5:00368"
+              },
+              {
+                "rank": 4,
+                "score": 0.9069,
+                "dense_score": 0.5507,
+                "lexical_score": 7.3056,
+                "source": "tg-agent/src/llm.rs",
+                "section": "function mcp_connect_def",
+                "chunk_id": "fixed:d998dd5480:00293"
+              },
+              {
+                "rank": 5,
+                "score": 0.8959,
+                "dense_score": 0.5129,
+                "lexical_score": 11.6742,
+                "source": "tg-agent/src/persist.rs",
+                "section": "file prelude",
+                "chunk_id": "fixed:48fb4b98b6:00333"
+              }
+            ]
+          },
+          {
+            "query": "Where does the bot build prompts with profile, memory, and tool context?",
+            "expected_sources": [
+              "tg-agent/src/agent/prompt.rs",
+              "tg-agent/src/llm.rs"
+            ],
+            "expected_sections": [
+              "prompt.rs",
+              "PromptBuilder",
+              "function"
+            ],
+            "source_rank": 1,
+            "section_rank": 2,
+            "source_hit_at_1": 1,
+            "source_hit_at_3": 1,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 0,
+            "section_hit_at_3": 1,
+            "section_hit_at_5": 1,
+            "has_expected_section": true,
+            "mrr_source": 1.0,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 0.9792,
+                "dense_score": 0.7321,
+                "lexical_score": 12.9731,
+                "source": "tg-agent/src/agent/prompt.rs",
+                "section": "file prelude",
+                "chunk_id": "fixed:3b7287a074:00206"
+              },
+              {
+                "rank": 2,
+                "score": 0.9561,
+                "dense_score": 0.7249,
+                "lexical_score": 11.5016,
+                "source": "tg-agent/src/agent/prompt.rs",
+                "section": "function build_system_prompt",
+                "chunk_id": "fixed:3b7287a074:00210"
+              },
+              {
+                "rank": 3,
+                "score": 0.9522,
+                "dense_score": 0.7081,
+                "lexical_score": 13.0705,
+                "source": "tg-agent/src/agent/prompt.rs",
+                "section": "file prelude",
+                "chunk_id": "fixed:3b7287a074:00209"
+              },
+              {
+                "rank": 4,
+                "score": 0.9272,
+                "dense_score": 0.694,
+                "lexical_score": 12.2035,
+                "source": "tg-agent/src/agent/mod.rs",
+                "section": "function run_turn",
+                "chunk_id": "fixed:39591a625a:00189"
+              },
+              {
+                "rank": 5,
+                "score": 0.9142,
+                "dense_score": 0.6783,
+                "lexical_score": 12.721,
+                "source": "tg-agent/src/agent/flow.rs",
+                "section": "function build_swarm_worker_system",
+                "chunk_id": "fixed:0fdbbbed0e:00131"
+              }
+            ]
+          },
+          {
+            "query": "Which test covers the live trip planning flow?",
+            "expected_sources": [
+              "tg-agent/tests/live_trip_flow.rs",
+              "tg-agent/tests/live_orchestrator.rs"
+            ],
+            "expected_sections": [
+              "live_trip_flow.rs",
+              "function"
+            ],
+            "source_rank": 1,
+            "section_rank": 1,
+            "source_hit_at_1": 1,
+            "source_hit_at_3": 1,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 1,
+            "section_hit_at_3": 1,
+            "section_hit_at_5": 1,
+            "has_expected_section": true,
+            "mrr_source": 1.0,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 0.9729,
+                "dense_score": 0.7429,
+                "lexical_score": 12.1659,
+                "source": "tg-agent/tests/live_orchestrator.rs",
+                "section": "function trip_swarm_clarifies_then_plans",
+                "chunk_id": "fixed:5c24861cd6:00374"
+              },
+              {
+                "rank": 2,
+                "score": 0.924,
+                "dense_score": 0.6902,
+                "lexical_score": 13.3022,
+                "source": "tg-agent/tests/live_orchestrator.rs",
+                "section": "function trip_swarm_supports_step_back",
+                "chunk_id": "fixed:5c24861cd6:00376"
+              },
+              {
+                "rank": 3,
+                "score": 0.9126,
+                "dense_score": 0.6664,
+                "lexical_score": 14.8543,
+                "source": "tg-agent/tests/live_orchestrator.rs",
+                "section": "function trip_swarm_clarifies_then_plans",
+                "chunk_id": "fixed:5c24861cd6:00375"
+              },
+              {
+                "rank": 4,
+                "score": 0.8932,
+                "dense_score": 0.7053,
+                "lexical_score": 8.5321,
+                "source": "tg-agent/src/agent/flow.rs",
+                "section": "module tests",
+                "chunk_id": "fixed:0fdbbbed0e:00149"
+              },
+              {
+                "rank": 5,
+                "score": 0.8728,
+                "dense_score": 0.6764,
+                "lexical_score": 9.7896,
+                "source": "tg-agent/tests/live_trip_flow.rs",
+                "section": "function assert_final_concrete",
+                "chunk_id": "fixed:27a24a721a:00383"
+              }
+            ]
+          },
+          {
+            "query": "What Open-Meteo MCP tools are available for forecasts and weather comparison?",
+            "expected_sources": [
+              "open-meteo-mcp/README.md",
+              "open-meteo-mcp/src/index.ts"
+            ],
+            "expected_sections": [
+              "Tools",
+              "Weather data",
+              "Weather comparison"
+            ],
+            "source_rank": 1,
+            "section_rank": 1,
+            "source_hit_at_1": 1,
+            "source_hit_at_3": 1,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 1,
+            "section_hit_at_3": 1,
+            "section_hit_at_5": 1,
+            "has_expected_section": true,
+            "mrr_source": 1.0,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 0.9867,
+                "dense_score": 0.8671,
+                "lexical_score": 15.2255,
+                "source": "open-meteo-mcp/README.md",
+                "section": "Weather data",
+                "chunk_id": "fixed:51c82b9fab:00001"
+              },
+              {
+                "rank": 2,
+                "score": 0.9184,
+                "dense_score": 0.8085,
+                "lexical_score": 14.0195,
+                "source": "open-meteo-mcp/README.md",
+                "section": "open-meteo-mcp",
+                "chunk_id": "fixed:51c82b9fab:00000"
+              },
+              {
+                "rank": 3,
+                "score": 0.8045,
+                "dense_score": 0.7246,
+                "lexical_score": 10.4852,
+                "source": "tg-agent/src/agent/flow.rs",
+                "section": "function agent_model_env_key",
+                "chunk_id": "fixed:0fdbbbed0e:00106"
+              },
+              {
+                "rank": 4,
+                "score": 0.7728,
+                "dense_score": 0.6946,
+                "lexical_score": 10.2382,
+                "source": "tg-agent/src/agent/prompt.rs",
+                "section": "file prelude",
+                "chunk_id": "fixed:3b7287a074:00208"
+              },
+              {
+                "rank": 5,
+                "score": 0.7433,
+                "dense_score": 0.6596,
+                "lexical_score": 10.769,
+                "source": "tg-agent/src/agent/flow.rs",
+                "section": "function agent_model_env_key",
+                "chunk_id": "fixed:0fdbbbed0e:00107"
+              }
+            ]
+          },
+          {
+            "query": "Where is weather quality scoring for city comparison implemented?",
+            "expected_sources": [
+              "open-meteo-mcp/src/tools/weather-logic.ts",
+              "open-meteo-mcp/src/tools/analyze.ts"
+            ],
+            "expected_sections": [
+              "weather-logic.ts",
+              "function",
+              "score"
+            ],
+            "source_rank": 2,
+            "section_rank": 4,
+            "source_hit_at_1": 0,
+            "source_hit_at_3": 1,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 0,
+            "section_hit_at_3": 0,
+            "section_hit_at_5": 1,
+            "has_expected_section": true,
+            "mrr_source": 0.5,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 0.984,
+                "dense_score": 0.65,
+                "lexical_score": 18.6398,
+                "source": "open-meteo-mcp/README.md",
+                "section": "Weather data",
+                "chunk_id": "fixed:51c82b9fab:00001"
+              },
+              {
+                "rank": 2,
+                "score": 0.8695,
+                "dense_score": 0.6625,
+                "lexical_score": 2.4262,
+                "source": "open-meteo-mcp/src/tools/weather-logic.ts",
+                "section": "interface Profile",
+                "chunk_id": "fixed:860bf99d20:00055"
+              },
+              {
+                "rank": 3,
+                "score": 0.8199,
+                "dense_score": 0.582,
+                "lexical_score": 9.097,
+                "source": "open-meteo-mcp/README.md",
+                "section": "open-meteo-mcp",
+                "chunk_id": "fixed:51c82b9fab:00000"
+              },
+              {
+                "rank": 4,
+                "score": 0.7946,
+                "dense_score": 0.6059,
+                "lexical_score": 2.1463,
+                "source": "open-meteo-mcp/src/tools/weather-logic.ts",
+                "section": "function gridPoints",
+                "chunk_id": "fixed:860bf99d20:00054"
+              },
+              {
+                "rank": 5,
+                "score": 0.7643,
+                "dense_score": 0.584,
+                "lexical_score": 1.8661,
+                "source": "tg-agent/src/agent/flow.rs",
+                "section": "function agent_model_env_key",
+                "chunk_id": "fixed:0fdbbbed0e:00106"
+              }
+            ]
+          },
+          {
+            "query": "Which TypeScript tool implements compare_weather_cities or regional weather analysis?",
+            "expected_sources": [
+              "open-meteo-mcp/src/tools/analyze.ts",
+              "open-meteo-mcp/README.md"
+            ],
+            "expected_sections": [
+              "analyze.ts",
+              "Weather comparison",
+              "function"
+            ],
+            "source_rank": 1,
+            "section_rank": 4,
+            "source_hit_at_1": 1,
+            "source_hit_at_3": 1,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 0,
+            "section_hit_at_3": 0,
+            "section_hit_at_5": 1,
+            "has_expected_section": true,
+            "mrr_source": 1.0,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 1.0,
+                "dense_score": 0.7419,
+                "lexical_score": 22.2047,
+                "source": "open-meteo-mcp/README.md",
+                "section": "Weather data",
+                "chunk_id": "fixed:51c82b9fab:00001"
+              },
+              {
+                "rank": 2,
+                "score": 0.8182,
+                "dense_score": 0.6803,
+                "lexical_score": 5.7417,
+                "source": "open-meteo-mcp/README.md",
+                "section": "open-meteo-mcp",
+                "chunk_id": "fixed:51c82b9fab:00000"
+              },
+              {
+                "rank": 3,
+                "score": 0.7732,
+                "dense_score": 0.6023,
+                "lexical_score": 12.3025,
+                "source": "open-meteo-mcp/README.md",
+                "section": "Development",
+                "chunk_id": "fixed:51c82b9fab:00003"
+              },
+              {
+                "rank": 4,
+                "score": 0.7611,
+                "dense_score": 0.6189,
+                "lexical_score": 7.6979,
+                "source": "tg-agent/src/agent/flow.rs",
+                "section": "function agent_model_env_key",
+                "chunk_id": "fixed:0fdbbbed0e:00106"
+              },
+              {
+                "rank": 5,
+                "score": 0.7307,
+                "dense_score": 0.6035,
+                "lexical_score": 5.8091,
+                "source": "open-meteo-mcp/src/tools/forecast.ts",
+                "section": "function resolveLocation",
+                "chunk_id": "fixed:96690ba7c4:00034"
+              }
+            ]
+          },
+          {
+            "query": "Where are scheduled weather jobs created, listed, summarized, and cancelled?",
+            "expected_sources": [
+              "open-meteo-mcp/src/tools/schedule.ts",
+              "open-meteo-mcp/README.md",
+              "open-meteo-mcp/src/scheduler.ts"
+            ],
+            "expected_sections": [
+              "schedule.ts",
+              "Scheduled collection",
+              "function"
+            ],
+            "source_rank": 1,
+            "section_rank": 1,
+            "source_hit_at_1": 1,
+            "source_hit_at_3": 1,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 1,
+            "section_hit_at_3": 1,
+            "section_hit_at_5": 1,
+            "has_expected_section": true,
+            "mrr_source": 1.0,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 0.959,
+                "dense_score": 0.713,
+                "lexical_score": 11.7104,
+                "source": "open-meteo-mcp/src/tools/schedule.ts",
+                "section": "function registerScheduleTools",
+                "chunk_id": "fixed:310ca5a236:00043"
+              },
+              {
+                "rank": 2,
+                "score": 0.8847,
+                "dense_score": 0.6387,
+                "lexical_score": 13.2469,
+                "source": "open-meteo-mcp/README.md",
+                "section": "Scheduled collection",
+                "chunk_id": "fixed:51c82b9fab:00002"
+              },
+              {
+                "rank": 3,
+                "score": 0.8816,
+                "dense_score": 0.6751,
+                "lexical_score": 8.2439,
+                "source": "tg-agent/src/llm.rs",
+                "section": "function schedule_summary_def",
+                "chunk_id": "fixed:d998dd5480:00289"
+              },
+              {
+                "rank": 4,
+                "score": 0.8618,
+                "dense_score": 0.6269,
+                "lexical_score": 12.2893,
+                "source": "open-meteo-mcp/src/tools/schedule.ts",
+                "section": "function registerScheduleTools",
+                "chunk_id": "fixed:310ca5a236:00048"
+              },
+              {
+                "rank": 5,
+                "score": 0.8098,
+                "dense_score": 0.5592,
+                "lexical_score": 15.3771,
+                "source": "open-meteo-mcp/README.md",
+                "section": "Weather data",
+                "chunk_id": "fixed:51c82b9fab:00001"
+              }
+            ]
+          },
+          {
+            "query": "Which code fetches weather forecast data from Open-Meteo APIs?",
+            "expected_sources": [
+              "open-meteo-mcp/src/tools/forecast.ts",
+              "open-meteo-mcp/src/client.ts",
+              "open-meteo-mcp/README.md"
+            ],
+            "expected_sections": [
+              "forecast.ts",
+              "Weather data",
+              "function"
+            ],
+            "source_rank": 1,
+            "section_rank": 2,
+            "source_hit_at_1": 1,
+            "source_hit_at_3": 1,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 0,
+            "section_hit_at_3": 1,
+            "section_hit_at_5": 1,
+            "has_expected_section": true,
+            "mrr_source": 1.0,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 1.0,
+                "dense_score": 0.7705,
+                "lexical_score": 22.7104,
+                "source": "open-meteo-mcp/README.md",
+                "section": "open-meteo-mcp",
+                "chunk_id": "fixed:51c82b9fab:00000"
+              },
+              {
+                "rank": 2,
+                "score": 0.8869,
+                "dense_score": 0.719,
+                "lexical_score": 14.1883,
+                "source": "open-meteo-mcp/README.md",
+                "section": "Weather data",
+                "chunk_id": "fixed:51c82b9fab:00001"
+              },
+              {
+                "rank": 3,
+                "score": 0.7795,
+                "dense_score": 0.6434,
+                "lexical_score": 10.5634,
+                "source": "open-meteo-mcp/tests/client.test.ts",
+                "section": "function mockFetch",
+                "chunk_id": "fixed:c4878d240c:00062"
+              },
+              {
+                "rank": 4,
+                "score": 0.7645,
+                "dense_score": 0.6086,
+                "lexical_score": 14.0944,
+                "source": "open-meteo-mcp/README.md",
+                "section": "Scheduled collection",
+                "chunk_id": "fixed:51c82b9fab:00002"
+              },
+              {
+                "rank": 5,
+                "score": 0.7644,
+                "dense_score": 0.6277,
+                "lexical_score": 10.8916,
+                "source": "open-meteo-mcp/src/tools/forecast.ts",
+                "section": "function resolveLocation",
+                "chunk_id": "fixed:96690ba7c4:00034"
+              }
+            ]
+          },
+          {
+            "query": "Where is geocoding for city names implemented in the weather MCP server?",
+            "expected_sources": [
+              "open-meteo-mcp/src/tools/geocoding.ts",
+              "open-meteo-mcp/README.md"
+            ],
+            "expected_sections": [
+              "geocoding.ts",
+              "geocode",
+              "function"
+            ],
+            "source_rank": 2,
+            "section_rank": 3,
+            "source_hit_at_1": 0,
+            "source_hit_at_3": 1,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 0,
+            "section_hit_at_3": 1,
+            "section_hit_at_5": 1,
+            "has_expected_section": true,
+            "mrr_source": 0.5,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 0.9227,
+                "dense_score": 0.6543,
+                "lexical_score": 9.0432,
+                "source": "tg-agent/src/agent/prompt.rs",
+                "section": "file prelude",
+                "chunk_id": "fixed:3b7287a074:00207"
+              },
+              {
+                "rank": 2,
+                "score": 0.8808,
+                "dense_score": 0.6342,
+                "lexical_score": 7.0654,
+                "source": "open-meteo-mcp/README.md",
+                "section": "open-meteo-mcp",
+                "chunk_id": "fixed:51c82b9fab:00000"
+              },
+              {
+                "rank": 3,
+                "score": 0.8503,
+                "dense_score": 0.5887,
+                "lexical_score": 10.6136,
+                "source": "open-meteo-mcp/src/tools/forecast.ts",
+                "section": "function resolveLocation",
+                "chunk_id": "fixed:96690ba7c4:00034"
+              },
+              {
+                "rank": 4,
+                "score": 0.844,
+                "dense_score": 0.5986,
+                "lexical_score": 8.2491,
+                "source": "tg-agent/tests/live_connect.rs",
+                "section": "function connects_and_lists_tools",
+                "chunk_id": "fixed:ae326e69c5:00367"
+              },
+              {
+                "rank": 5,
+                "score": 0.8243,
+                "dense_score": 0.5781,
+                "lexical_score": 9.1181,
+                "source": "open-meteo-mcp/README.md",
+                "section": "Scheduled collection",
+                "chunk_id": "fixed:51c82b9fab:00002"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "structural": {
+      "manifest": {
+        "created_at": "2026-06-30T09:11:44Z",
+        "strategy": "structural",
+        "embedder": "ollama",
+        "model": "qwen3-embedding",
+        "corpus_dir": "corpus-real",
+        "document_count": 37,
+        "estimated_pages": 128.46,
+        "text_characters": 385392,
+        "chunk_settings": {
+          "max_chars": 1800,
+          "overlap": 160
+        },
+        "stats": {
+          "chunks": 458,
+          "avg_chars": 875.53,
+          "min_chars": 13,
+          "max_chars": 1799,
+          "avg_tokens_estimate": 251.23,
+          "with_section": 458,
+          "with_section_ratio": 1.0,
+          "chunks_per_source": {
+            "open-meteo-mcp/README.md": 10,
+            "open-meteo-mcp/src/client.ts": 1,
+            "open-meteo-mcp/src/index.ts": 4,
+            "open-meteo-mcp/src/notifications.ts": 10,
+            "open-meteo-mcp/src/scheduler.ts": 7,
+            "open-meteo-mcp/src/summarize.ts": 3,
+            "open-meteo-mcp/src/tools/air-quality.ts": 3,
+            "open-meteo-mcp/src/tools/analyze.ts": 13,
+            "open-meteo-mcp/src/tools/forecast.ts": 6,
+            "open-meteo-mcp/src/tools/geocoding.ts": 2,
+            "open-meteo-mcp/src/tools/marine.ts": 4,
+            "open-meteo-mcp/src/tools/schedule.ts": 6,
+            "open-meteo-mcp/src/tools/weather-logic.ts": 14,
+            "open-meteo-mcp/tests/analyze.test.ts": 3,
+            "open-meteo-mcp/tests/client.test.ts": 3,
+            "open-meteo-mcp/tests/scheduler.test.ts": 2,
+            "tg-agent/AGENTS.md": 9,
+            "tg-agent/CLAUDE.md": 9,
+            "tg-agent/README.md": 8,
+            "tg-agent/src/agent/flow.rs": 95,
+            "tg-agent/src/agent/memory.rs": 23,
+            "tg-agent/src/agent/mod.rs": 23,
+            "tg-agent/src/agent/profile.rs": 9,
+            "tg-agent/src/agent/prompt.rs": 7,
+            "tg-agent/src/agent/router.rs": 7,
+            "tg-agent/src/agent/session.rs": 7,
+            "tg-agent/src/bot.rs": 44,
+            "tg-agent/src/config.rs": 5,
+            "tg-agent/src/llm.rs": 44,
+            "tg-agent/src/main.rs": 4,
+            "tg-agent/src/mcp_client.rs": 12,
+            "tg-agent/src/persist.rs": 10,
+            "tg-agent/src/scheduler.rs": 4,
+            "tg-agent/src/state.rs": 21,
+            "tg-agent/tests/live_connect.rs": 3,
+            "tg-agent/tests/live_orchestrator.rs": 8,
+            "tg-agent/tests/live_trip_flow.rs": 15
+          }
+        },
+        "backend": "faiss",
+        "chunk_count": 458,
+        "dimension": 4096,
+        "files": {
+          "chunks": "chunks.jsonl",
+          "vectors": "vectors.npy",
+          "faiss": "index.faiss"
+        }
+      },
+      "stats": {
+        "chunks": 458,
+        "avg_chars": 875.53,
+        "min_chars": 13,
+        "max_chars": 1799,
+        "avg_tokens_estimate": 251.23,
+        "with_section": 458,
+        "with_section_ratio": 1.0,
+        "chunks_per_source": {
+          "open-meteo-mcp/README.md": 10,
+          "open-meteo-mcp/src/client.ts": 1,
+          "open-meteo-mcp/src/index.ts": 4,
+          "open-meteo-mcp/src/notifications.ts": 10,
+          "open-meteo-mcp/src/scheduler.ts": 7,
+          "open-meteo-mcp/src/summarize.ts": 3,
+          "open-meteo-mcp/src/tools/air-quality.ts": 3,
+          "open-meteo-mcp/src/tools/analyze.ts": 13,
+          "open-meteo-mcp/src/tools/forecast.ts": 6,
+          "open-meteo-mcp/src/tools/geocoding.ts": 2,
+          "open-meteo-mcp/src/tools/marine.ts": 4,
+          "open-meteo-mcp/src/tools/schedule.ts": 6,
+          "open-meteo-mcp/src/tools/weather-logic.ts": 14,
+          "open-meteo-mcp/tests/analyze.test.ts": 3,
+          "open-meteo-mcp/tests/client.test.ts": 3,
+          "open-meteo-mcp/tests/scheduler.test.ts": 2,
+          "tg-agent/AGENTS.md": 9,
+          "tg-agent/CLAUDE.md": 9,
+          "tg-agent/README.md": 8,
+          "tg-agent/src/agent/flow.rs": 95,
+          "tg-agent/src/agent/memory.rs": 23,
+          "tg-agent/src/agent/mod.rs": 23,
+          "tg-agent/src/agent/profile.rs": 9,
+          "tg-agent/src/agent/prompt.rs": 7,
+          "tg-agent/src/agent/router.rs": 7,
+          "tg-agent/src/agent/session.rs": 7,
+          "tg-agent/src/bot.rs": 44,
+          "tg-agent/src/config.rs": 5,
+          "tg-agent/src/llm.rs": 44,
+          "tg-agent/src/main.rs": 4,
+          "tg-agent/src/mcp_client.rs": 12,
+          "tg-agent/src/persist.rs": 10,
+          "tg-agent/src/scheduler.rs": 4,
+          "tg-agent/src/state.rs": 21,
+          "tg-agent/tests/live_connect.rs": 3,
+          "tg-agent/tests/live_orchestrator.rs": 8,
+          "tg-agent/tests/live_trip_flow.rs": 15
+        }
+      },
+      "retrieval": {
+        "query_count": 12,
+        "source_hit_at_1": 0.8333,
+        "source_hit_at_3": 1.0,
+        "source_hit_at_5": 1.0,
+        "section_hit_at_1": 0.6667,
+        "section_hit_at_3": 0.9167,
+        "section_hit_at_5": 1.0,
+        "mrr_source": 0.9167,
+        "rows": [
+          {
+            "query": "How does the Telegram bot connect to MCP servers at runtime?",
+            "expected_sources": [
+              "tg-agent/README.md",
+              "tg-agent/AGENTS.md",
+              "tg-agent/CLAUDE.md",
+              "tg-agent/src/llm.rs",
+              "tg-agent/src/mcp_client.rs"
+            ],
+            "expected_sections": [
+              "tg-agent",
+              "Runtime MCP management",
+              "Self-connect",
+              "mcp_connect"
+            ],
+            "source_rank": 1,
+            "section_rank": 1,
+            "source_hit_at_1": 1,
+            "source_hit_at_3": 1,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 1,
+            "section_hit_at_3": 1,
+            "section_hit_at_5": 1,
+            "has_expected_section": true,
+            "mrr_source": 1.0,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 1.0,
+                "dense_score": 0.8638,
+                "lexical_score": 19.7582,
+                "source": "tg-agent/README.md",
+                "section": "tg-agent",
+                "chunk_id": "structural:50184eaf77:00109"
+              },
+              {
+                "rank": 2,
+                "score": 0.8372,
+                "dense_score": 0.7894,
+                "lexical_score": 7.9534,
+                "source": "tg-agent/AGENTS.md",
+                "section": "tg-agent — Codex context",
+                "chunk_id": "structural:3331d4e18e:00091"
+              },
+              {
+                "rank": 3,
+                "score": 0.8372,
+                "dense_score": 0.7894,
+                "lexical_score": 7.9534,
+                "source": "tg-agent/CLAUDE.md",
+                "section": "tg-agent — Codex context",
+                "chunk_id": "structural:75fb1ca9b6:00100"
+              },
+              {
+                "rank": 4,
+                "score": 0.8146,
+                "dense_score": 0.7893,
+                "lexical_score": 4.9875,
+                "source": "tg-agent/AGENTS.md",
+                "section": "Что это",
+                "chunk_id": "structural:3331d4e18e:00092"
+              },
+              {
+                "rank": 5,
+                "score": 0.8146,
+                "dense_score": 0.7893,
+                "lexical_score": 4.9875,
+                "source": "tg-agent/CLAUDE.md",
+                "section": "Что это",
+                "chunk_id": "structural:75fb1ca9b6:00101"
+              }
+            ]
+          },
+          {
+            "query": "Which Rust module implements MCP client communication and tool calls?",
+            "expected_sources": [
+              "tg-agent/src/mcp_client.rs",
+              "tg-agent/tests/live_connect.rs"
+            ],
+            "expected_sections": [
+              "mcp_client.rs",
+              "function",
+              "struct"
+            ],
+            "source_rank": 1,
+            "section_rank": 1,
+            "source_hit_at_1": 1,
+            "source_hit_at_3": 1,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 1,
+            "section_hit_at_3": 1,
+            "section_hit_at_5": 1,
+            "has_expected_section": true,
+            "mrr_source": 1.0,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 0.9537,
+                "dense_score": 0.7436,
+                "lexical_score": 8.4584,
+                "source": "tg-agent/src/mcp_client.rs",
+                "section": "struct McpClient",
+                "chunk_id": "structural:4c96fc4327:00389"
+              },
+              {
+                "rank": 2,
+                "score": 0.899,
+                "dense_score": 0.6628,
+                "lexical_score": 11.534,
+                "source": "tg-agent/src/mcp_client.rs",
+                "section": "enum McpEvent",
+                "chunk_id": "structural:4c96fc4327:00386"
+              },
+              {
+                "rank": 3,
+                "score": 0.8681,
+                "dense_score": 0.7005,
+                "lexical_score": 5.4896,
+                "source": "tg-agent/src/mcp_client.rs",
+                "section": "impl McpClient",
+                "chunk_id": "structural:4c96fc4327:00390"
+              },
+              {
+                "rank": 4,
+                "score": 0.8493,
+                "dense_score": 0.6312,
+                "lexical_score": 10.4314,
+                "source": "tg-agent/src/mcp_client.rs",
+                "section": "impl McpClient",
+                "chunk_id": "structural:4c96fc4327:00393"
+              },
+              {
+                "rank": 5,
+                "score": 0.8447,
+                "dense_score": 0.6457,
+                "lexical_score": 8.6957,
+                "source": "tg-agent/tests/live_connect.rs",
+                "section": "function connects_and_lists_tools",
+                "chunk_id": "structural:ae326e69c5:00433"
+              }
+            ]
+          },
+          {
+            "query": "Where is the dynamic trip-planning swarm described or implemented?",
+            "expected_sources": [
+              "tg-agent/src/agent/flow.rs",
+              "tg-agent/README.md",
+              "tg-agent/tests/live_trip_flow.rs"
+            ],
+            "expected_sections": [
+              "flow.rs",
+              "trip",
+              "swarm",
+              "function"
+            ],
+            "source_rank": 1,
+            "section_rank": 3,
+            "source_hit_at_1": 1,
+            "source_hit_at_3": 1,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 0,
+            "section_hit_at_3": 1,
+            "section_hit_at_5": 1,
+            "has_expected_section": true,
+            "mrr_source": 1.0,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 0.9079,
+                "dense_score": 0.6697,
+                "lexical_score": 15.8819,
+                "source": "tg-agent/README.md",
+                "section": "Features",
+                "chunk_id": "structural:50184eaf77:00111"
+              },
+              {
+                "rank": 2,
+                "score": 0.9047,
+                "dense_score": 0.6755,
+                "lexical_score": 14.8526,
+                "source": "tg-agent/src/agent/flow.rs",
+                "section": "file prelude",
+                "chunk_id": "structural:0fdbbbed0e:00117"
+              },
+              {
+                "rank": 3,
+                "score": 0.9044,
+                "dense_score": 0.7511,
+                "lexical_score": 5.7585,
+                "source": "tg-agent/src/agent/flow.rs",
+                "section": "function agent_model_env_key",
+                "chunk_id": "structural:0fdbbbed0e:00158"
+              },
+              {
+                "rank": 4,
+                "score": 0.8867,
+                "dense_score": 0.6943,
+                "lexical_score": 10.6879,
+                "source": "tg-agent/tests/live_orchestrator.rs",
+                "section": "function trip_swarm_clarifies_then_plans",
+                "chunk_id": "structural:5c24861cd6:00441"
+              },
+              {
+                "rank": 5,
+                "score": 0.8696,
+                "dense_score": 0.6507,
+                "lexical_score": 14.1031,
+                "source": "tg-agent/src/agent/mod.rs",
+                "section": "file prelude",
+                "chunk_id": "structural:39591a625a:00235"
+              }
+            ]
+          },
+          {
+            "query": "How are connected servers and user sessions persisted across restarts?",
+            "expected_sources": [
+              "tg-agent/src/state.rs",
+              "tg-agent/src/persist.rs",
+              "tg-agent/README.md"
+            ],
+            "expected_sections": [
+              "state.rs",
+              "Persistence",
+              "function"
+            ],
+            "source_rank": 2,
+            "section_rank": 1,
+            "source_hit_at_1": 0,
+            "source_hit_at_3": 1,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 1,
+            "section_hit_at_3": 1,
+            "section_hit_at_5": 1,
+            "has_expected_section": true,
+            "mrr_source": 0.5,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 0.9317,
+                "dense_score": 0.6383,
+                "lexical_score": 9.1535,
+                "source": "tg-agent/tests/live_connect.rs",
+                "section": "function registry_keeps_connection_across_calls",
+                "chunk_id": "structural:ae326e69c5:00434"
+              },
+              {
+                "rank": 2,
+                "score": 0.8771,
+                "dense_score": 0.544,
+                "lexical_score": 16.7993,
+                "source": "tg-agent/README.md",
+                "section": "Features",
+                "chunk_id": "structural:50184eaf77:00111"
+              },
+              {
+                "rank": 3,
+                "score": 0.8588,
+                "dense_score": 0.58,
+                "lexical_score": 9.4976,
+                "source": "open-meteo-mcp/src/scheduler.ts",
+                "section": "function isRunning",
+                "chunk_id": "structural:92d1cf5d45:00030"
+              },
+              {
+                "rank": 4,
+                "score": 0.8307,
+                "dense_score": 0.5163,
+                "lexical_score": 15.6503,
+                "source": "tg-agent/src/persist.rs",
+                "section": "file prelude",
+                "chunk_id": "structural:48fb4b98b6:00397"
+              },
+              {
+                "rank": 5,
+                "score": 0.7973,
+                "dense_score": 0.5394,
+                "lexical_score": 8.5401,
+                "source": "tg-agent/src/persist.rs",
+                "section": "struct Persisted",
+                "chunk_id": "structural:48fb4b98b6:00403"
+              }
+            ]
+          },
+          {
+            "query": "Where does the bot build prompts with profile, memory, and tool context?",
+            "expected_sources": [
+              "tg-agent/src/agent/prompt.rs",
+              "tg-agent/src/llm.rs"
+            ],
+            "expected_sections": [
+              "prompt.rs",
+              "PromptBuilder",
+              "function"
+            ],
+            "source_rank": 1,
+            "section_rank": 4,
+            "source_hit_at_1": 1,
+            "source_hit_at_3": 1,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 0,
+            "section_hit_at_3": 0,
+            "section_hit_at_5": 1,
+            "has_expected_section": true,
+            "mrr_source": 1.0,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 0.9707,
+                "dense_score": 0.7563,
+                "lexical_score": 11.6538,
+                "source": "tg-agent/src/agent/prompt.rs",
+                "section": "file prelude",
+                "chunk_id": "structural:3b7287a074:00269"
+              },
+              {
+                "rank": 2,
+                "score": 0.948,
+                "dense_score": 0.7142,
+                "lexical_score": 14.03,
+                "source": "tg-agent/src/agent/mod.rs",
+                "section": "struct TurnResult",
+                "chunk_id": "structural:39591a625a:00246"
+              },
+              {
+                "rank": 3,
+                "score": 0.9311,
+                "dense_score": 0.702,
+                "lexical_score": 13.7205,
+                "source": "tg-agent/src/agent/prompt.rs",
+                "section": "file prelude",
+                "chunk_id": "structural:3b7287a074:00267"
+              },
+              {
+                "rank": 4,
+                "score": 0.9289,
+                "dense_score": 0.7014,
+                "lexical_score": 13.5699,
+                "source": "tg-agent/src/agent/prompt.rs",
+                "section": "function build_system_prompt",
+                "chunk_id": "structural:3b7287a074:00270"
+              },
+              {
+                "rank": 5,
+                "score": 0.8949,
+                "dense_score": 0.6965,
+                "lexical_score": 10.8168,
+                "source": "tg-agent/src/llm.rs",
+                "section": "impl Llm",
+                "chunk_id": "structural:d998dd5480:00341"
+              }
+            ]
+          },
+          {
+            "query": "Which test covers the live trip planning flow?",
+            "expected_sources": [
+              "tg-agent/tests/live_trip_flow.rs",
+              "tg-agent/tests/live_orchestrator.rs"
+            ],
+            "expected_sections": [
+              "live_trip_flow.rs",
+              "function"
+            ],
+            "source_rank": 1,
+            "section_rank": 1,
+            "source_hit_at_1": 1,
+            "source_hit_at_3": 1,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 1,
+            "section_hit_at_3": 1,
+            "section_hit_at_5": 1,
+            "has_expected_section": true,
+            "mrr_source": 1.0,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 0.9806,
+                "dense_score": 0.7337,
+                "lexical_score": 12.7742,
+                "source": "tg-agent/tests/live_orchestrator.rs",
+                "section": "function trip_swarm_clarifies_then_plans",
+                "chunk_id": "structural:5c24861cd6:00441"
+              },
+              {
+                "rank": 2,
+                "score": 0.8861,
+                "dense_score": 0.6673,
+                "lexical_score": 11.0655,
+                "source": "tg-agent/tests/live_trip_flow.rs",
+                "section": "function live_cycling_trip_end_to_end_no_water_hardcode",
+                "chunk_id": "structural:27a24a721a:00455"
+              },
+              {
+                "rank": 3,
+                "score": 0.886,
+                "dense_score": 0.6621,
+                "lexical_score": 11.6425,
+                "source": "tg-agent/src/agent/flow.rs",
+                "section": "module tests",
+                "chunk_id": "structural:0fdbbbed0e:00202"
+              },
+              {
+                "rank": 4,
+                "score": 0.8817,
+                "dense_score": 0.687,
+                "lexical_score": 8.3995,
+                "source": "tg-agent/tests/live_trip_flow.rs",
+                "section": "function live_walk_to_see_new_place_end_to_end_no_overnight_hardcode",
+                "chunk_id": "structural:27a24a721a:00456"
+              },
+              {
+                "rank": 5,
+                "score": 0.8808,
+                "dense_score": 0.6874,
+                "lexical_score": 8.272,
+                "source": "tg-agent/tests/live_trip_flow.rs",
+                "section": "function live_full_kayak_trip_creates_google_artifacts",
+                "chunk_id": "structural:27a24a721a:00452"
+              }
+            ]
+          },
+          {
+            "query": "What Open-Meteo MCP tools are available for forecasts and weather comparison?",
+            "expected_sources": [
+              "open-meteo-mcp/README.md",
+              "open-meteo-mcp/src/index.ts"
+            ],
+            "expected_sections": [
+              "Tools",
+              "Weather data",
+              "Weather comparison"
+            ],
+            "source_rank": 1,
+            "section_rank": 1,
+            "source_hit_at_1": 1,
+            "source_hit_at_3": 1,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 1,
+            "section_hit_at_3": 1,
+            "section_hit_at_5": 1,
+            "has_expected_section": true,
+            "mrr_source": 1.0,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 1.0,
+                "dense_score": 0.8956,
+                "lexical_score": 18.0794,
+                "source": "open-meteo-mcp/README.md",
+                "section": "Weather comparison",
+                "chunk_id": "structural:51c82b9fab:00003"
+              },
+              {
+                "rank": 2,
+                "score": 0.9402,
+                "dense_score": 0.8802,
+                "lexical_score": 12.6417,
+                "source": "open-meteo-mcp/README.md",
+                "section": "open-meteo-mcp",
+                "chunk_id": "structural:51c82b9fab:00000"
+              },
+              {
+                "rank": 3,
+                "score": 0.8788,
+                "dense_score": 0.8404,
+                "lexical_score": 9.7872,
+                "source": "tg-agent/src/agent/prompt.rs",
+                "section": "file prelude",
+                "chunk_id": "structural:3b7287a074:00268"
+              },
+              {
+                "rank": 4,
+                "score": 0.8781,
+                "dense_score": 0.8504,
+                "lexical_score": 8.5611,
+                "source": "open-meteo-mcp/README.md",
+                "section": "Weather data",
+                "chunk_id": "structural:51c82b9fab:00002"
+              },
+              {
+                "rank": 5,
+                "score": 0.8075,
+                "dense_score": 0.7345,
+                "lexical_score": 13.3104,
+                "source": "open-meteo-mcp/src/tools/analyze.ts",
+                "section": "function registerAnalyzeTools",
+                "chunk_id": "structural:b2d0f74433:00047"
+              }
+            ]
+          },
+          {
+            "query": "Where is weather quality scoring for city comparison implemented?",
+            "expected_sources": [
+              "open-meteo-mcp/src/tools/weather-logic.ts",
+              "open-meteo-mcp/src/tools/analyze.ts"
+            ],
+            "expected_sections": [
+              "weather-logic.ts",
+              "function",
+              "score"
+            ],
+            "source_rank": 2,
+            "section_rank": 2,
+            "source_hit_at_1": 0,
+            "source_hit_at_3": 1,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 0,
+            "section_hit_at_3": 1,
+            "section_hit_at_5": 1,
+            "has_expected_section": true,
+            "mrr_source": 0.5,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 1.0,
+                "dense_score": 0.7262,
+                "lexical_score": 24.7479,
+                "source": "open-meteo-mcp/README.md",
+                "section": "Weather comparison",
+                "chunk_id": "structural:51c82b9fab:00003"
+              },
+              {
+                "rank": 2,
+                "score": 0.8692,
+                "dense_score": 0.7012,
+                "lexical_score": 7.9994,
+                "source": "open-meteo-mcp/src/tools/analyze.ts",
+                "section": "function registerAnalyzeTools",
+                "chunk_id": "structural:b2d0f74433:00045"
+              },
+              {
+                "rank": 3,
+                "score": 0.866,
+                "dense_score": 0.6942,
+                "lexical_score": 8.8162,
+                "source": "open-meteo-mcp/src/tools/analyze.ts",
+                "section": "function registerAnalyzeTools",
+                "chunk_id": "structural:b2d0f74433:00047"
+              },
+              {
+                "rank": 4,
+                "score": 0.8189,
+                "dense_score": 0.664,
+                "lexical_score": 6.8754,
+                "source": "open-meteo-mcp/src/tools/analyze.ts",
+                "section": "function registerAnalyzeTools",
+                "chunk_id": "structural:b2d0f74433:00046"
+              },
+              {
+                "rank": 5,
+                "score": 0.8016,
+                "dense_score": 0.6604,
+                "lexical_score": 4.7292,
+                "source": "tg-agent/src/agent/prompt.rs",
+                "section": "file prelude",
+                "chunk_id": "structural:3b7287a074:00268"
+              }
+            ]
+          },
+          {
+            "query": "Which TypeScript tool implements compare_weather_cities or regional weather analysis?",
+            "expected_sources": [
+              "open-meteo-mcp/src/tools/analyze.ts",
+              "open-meteo-mcp/README.md"
+            ],
+            "expected_sections": [
+              "analyze.ts",
+              "Weather comparison",
+              "function"
+            ],
+            "source_rank": 1,
+            "section_rank": 1,
+            "source_hit_at_1": 1,
+            "source_hit_at_3": 1,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 1,
+            "section_hit_at_3": 1,
+            "section_hit_at_5": 1,
+            "has_expected_section": true,
+            "mrr_source": 1.0,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 1.0,
+                "dense_score": 0.7775,
+                "lexical_score": 25.4729,
+                "source": "open-meteo-mcp/README.md",
+                "section": "Weather comparison",
+                "chunk_id": "structural:51c82b9fab:00003"
+              },
+              {
+                "rank": 2,
+                "score": 0.8494,
+                "dense_score": 0.701,
+                "lexical_score": 14.0978,
+                "source": "open-meteo-mcp/src/tools/analyze.ts",
+                "section": "function registerAnalyzeTools",
+                "chunk_id": "structural:b2d0f74433:00045"
+              },
+              {
+                "rank": 3,
+                "score": 0.8278,
+                "dense_score": 0.7251,
+                "lexical_score": 5.9548,
+                "source": "tg-agent/src/agent/prompt.rs",
+                "section": "file prelude",
+                "chunk_id": "structural:3b7287a074:00268"
+              },
+              {
+                "rank": 4,
+                "score": 0.825,
+                "dense_score": 0.728,
+                "lexical_score": 4.9264,
+                "source": "open-meteo-mcp/README.md",
+                "section": "open-meteo-mcp",
+                "chunk_id": "structural:51c82b9fab:00000"
+              },
+              {
+                "rank": 5,
+                "score": 0.8054,
+                "dense_score": 0.6981,
+                "lexical_score": 7.1643,
+                "source": "open-meteo-mcp/src/tools/analyze.ts",
+                "section": "function registerAnalyzeTools",
+                "chunk_id": "structural:b2d0f74433:00048"
+              }
+            ]
+          },
+          {
+            "query": "Where are scheduled weather jobs created, listed, summarized, and cancelled?",
+            "expected_sources": [
+              "open-meteo-mcp/src/tools/schedule.ts",
+              "open-meteo-mcp/README.md",
+              "open-meteo-mcp/src/scheduler.ts"
+            ],
+            "expected_sections": [
+              "schedule.ts",
+              "Scheduled collection",
+              "function"
+            ],
+            "source_rank": 1,
+            "section_rank": 1,
+            "source_hit_at_1": 1,
+            "source_hit_at_3": 1,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 1,
+            "section_hit_at_3": 1,
+            "section_hit_at_5": 1,
+            "has_expected_section": true,
+            "mrr_source": 1.0,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 1.0,
+                "dense_score": 0.7794,
+                "lexical_score": 17.0336,
+                "source": "open-meteo-mcp/README.md",
+                "section": "Scheduled collection",
+                "chunk_id": "structural:51c82b9fab:00004"
+              },
+              {
+                "rank": 2,
+                "score": 0.9029,
+                "dense_score": 0.6932,
+                "lexical_score": 16.6849,
+                "source": "open-meteo-mcp/src/tools/schedule.ts",
+                "section": "function registerScheduleTools",
+                "chunk_id": "structural:310ca5a236:00065"
+              },
+              {
+                "rank": 3,
+                "score": 0.8127,
+                "dense_score": 0.6748,
+                "lexical_score": 8.712,
+                "source": "open-meteo-mcp/src/tools/schedule.ts",
+                "section": "function registerScheduleTools",
+                "chunk_id": "structural:310ca5a236:00064"
+              },
+              {
+                "rank": 4,
+                "score": 0.806,
+                "dense_score": 0.6245,
+                "lexical_score": 14.1827,
+                "source": "open-meteo-mcp/README.md",
+                "section": "Features",
+                "chunk_id": "structural:51c82b9fab:00001"
+              },
+              {
+                "rank": 5,
+                "score": 0.8009,
+                "dense_score": 0.6537,
+                "lexical_score": 9.9886,
+                "source": "tg-agent/src/llm.rs",
+                "section": "function schedule_summary_def",
+                "chunk_id": "structural:d998dd5480:00354"
+              }
+            ]
+          },
+          {
+            "query": "Which code fetches weather forecast data from Open-Meteo APIs?",
+            "expected_sources": [
+              "open-meteo-mcp/src/tools/forecast.ts",
+              "open-meteo-mcp/src/client.ts",
+              "open-meteo-mcp/README.md"
+            ],
+            "expected_sections": [
+              "forecast.ts",
+              "Weather data",
+              "function"
+            ],
+            "source_rank": 1,
+            "section_rank": 3,
+            "source_hit_at_1": 1,
+            "source_hit_at_3": 1,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 0,
+            "section_hit_at_3": 1,
+            "section_hit_at_5": 1,
+            "has_expected_section": true,
+            "mrr_source": 1.0,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 1.0,
+                "dense_score": 0.8472,
+                "lexical_score": 17.944,
+                "source": "open-meteo-mcp/README.md",
+                "section": "open-meteo-mcp",
+                "chunk_id": "structural:51c82b9fab:00000"
+              },
+              {
+                "rank": 2,
+                "score": 0.8212,
+                "dense_score": 0.6929,
+                "lexical_score": 15.0635,
+                "source": "open-meteo-mcp/README.md",
+                "section": "Features",
+                "chunk_id": "structural:51c82b9fab:00001"
+              },
+              {
+                "rank": 3,
+                "score": 0.8086,
+                "dense_score": 0.6722,
+                "lexical_score": 16.0511,
+                "source": "open-meteo-mcp/README.md",
+                "section": "Weather data",
+                "chunk_id": "structural:51c82b9fab:00002"
+              },
+              {
+                "rank": 4,
+                "score": 0.7936,
+                "dense_score": 0.6893,
+                "lexical_score": 12.2024,
+                "source": "open-meteo-mcp/src/tools/weather-logic.ts",
+                "section": "interface NDay",
+                "chunk_id": "structural:860bf99d20:00070"
+              },
+              {
+                "rank": 5,
+                "score": 0.7931,
+                "dense_score": 0.6511,
+                "lexical_score": 16.7254,
+                "source": "open-meteo-mcp/src/tools/analyze.ts",
+                "section": "function registerAnalyzeTools",
+                "chunk_id": "structural:b2d0f74433:00043"
+              }
+            ]
+          },
+          {
+            "query": "Where is geocoding for city names implemented in the weather MCP server?",
+            "expected_sources": [
+              "open-meteo-mcp/src/tools/geocoding.ts",
+              "open-meteo-mcp/README.md"
+            ],
+            "expected_sections": [
+              "geocoding.ts",
+              "geocode",
+              "function"
+            ],
+            "source_rank": 1,
+            "section_rank": 1,
+            "source_hit_at_1": 1,
+            "source_hit_at_3": 1,
+            "source_hit_at_5": 1,
+            "section_hit_at_1": 1,
+            "section_hit_at_3": 1,
+            "section_hit_at_5": 1,
+            "has_expected_section": true,
+            "mrr_source": 1.0,
+            "top_results": [
+              {
+                "rank": 1,
+                "score": 1.0,
+                "dense_score": 0.7375,
+                "lexical_score": 18.9671,
+                "source": "open-meteo-mcp/src/tools/geocoding.ts",
+                "section": "function registerGeocoding",
+                "chunk_id": "structural:5f4f51f7be:00058"
+              },
+              {
+                "rank": 2,
+                "score": 0.9073,
+                "dense_score": 0.7321,
+                "lexical_score": 8.029,
+                "source": "open-meteo-mcp/README.md",
+                "section": "open-meteo-mcp",
+                "chunk_id": "structural:51c82b9fab:00000"
+              },
+              {
+                "rank": 3,
+                "score": 0.8231,
+                "dense_score": 0.6337,
+                "lexical_score": 11.7167,
+                "source": "open-meteo-mcp/src/tools/forecast.ts",
+                "section": "function DailyVar",
+                "chunk_id": "structural:96690ba7c4:00053"
+              },
+              {
+                "rank": 4,
+                "score": 0.7904,
+                "dense_score": 0.5769,
+                "lexical_score": 15.8728,
+                "source": "open-meteo-mcp/README.md",
+                "section": "Weather comparison",
+                "chunk_id": "structural:51c82b9fab:00003"
+              },
+              {
+                "rank": 5,
+                "score": 0.7826,
+                "dense_score": 0.6145,
+                "lexical_score": 9.3966,
+                "source": "open-meteo-mcp/README.md",
+                "section": "Claude Desktop config",
+                "chunk_id": "structural:51c82b9fab:00006"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "queries": [
+    {
+      "query": "How does the Telegram bot connect to MCP servers at runtime?",
+      "expected_sources": [
+        "tg-agent/README.md",
+        "tg-agent/AGENTS.md",
+        "tg-agent/CLAUDE.md",
+        "tg-agent/src/llm.rs",
+        "tg-agent/src/mcp_client.rs"
+      ],
+      "expected_sections": [
+        "tg-agent",
+        "Runtime MCP management",
+        "Self-connect",
+        "mcp_connect"
+      ]
+    },
+    {
+      "query": "Which Rust module implements MCP client communication and tool calls?",
+      "expected_sources": [
+        "tg-agent/src/mcp_client.rs",
+        "tg-agent/tests/live_connect.rs"
+      ],
+      "expected_sections": [
+        "mcp_client.rs",
+        "function",
+        "struct"
+      ]
+    },
+    {
+      "query": "Where is the dynamic trip-planning swarm described or implemented?",
+      "expected_sources": [
+        "tg-agent/src/agent/flow.rs",
+        "tg-agent/README.md",
+        "tg-agent/tests/live_trip_flow.rs"
+      ],
+      "expected_sections": [
+        "flow.rs",
+        "trip",
+        "swarm",
+        "function"
+      ]
+    },
+    {
+      "query": "How are connected servers and user sessions persisted across restarts?",
+      "expected_sources": [
+        "tg-agent/src/state.rs",
+        "tg-agent/src/persist.rs",
+        "tg-agent/README.md"
+      ],
+      "expected_sections": [
+        "state.rs",
+        "Persistence",
+        "function"
+      ]
+    },
+    {
+      "query": "Where does the bot build prompts with profile, memory, and tool context?",
+      "expected_sources": [
+        "tg-agent/src/agent/prompt.rs",
+        "tg-agent/src/llm.rs"
+      ],
+      "expected_sections": [
+        "prompt.rs",
+        "PromptBuilder",
+        "function"
+      ]
+    },
+    {
+      "query": "Which test covers the live trip planning flow?",
+      "expected_sources": [
+        "tg-agent/tests/live_trip_flow.rs",
+        "tg-agent/tests/live_orchestrator.rs"
+      ],
+      "expected_sections": [
+        "live_trip_flow.rs",
+        "function"
+      ]
+    },
+    {
+      "query": "What Open-Meteo MCP tools are available for forecasts and weather comparison?",
+      "expected_sources": [
+        "open-meteo-mcp/README.md",
+        "open-meteo-mcp/src/index.ts"
+      ],
+      "expected_sections": [
+        "Tools",
+        "Weather data",
+        "Weather comparison"
+      ]
+    },
+    {
+      "query": "Where is weather quality scoring for city comparison implemented?",
+      "expected_sources": [
+        "open-meteo-mcp/src/tools/weather-logic.ts",
+        "open-meteo-mcp/src/tools/analyze.ts"
+      ],
+      "expected_sections": [
+        "weather-logic.ts",
+        "function",
+        "score"
+      ]
+    },
+    {
+      "query": "Which TypeScript tool implements compare_weather_cities or regional weather analysis?",
+      "expected_sources": [
+        "open-meteo-mcp/src/tools/analyze.ts",
+        "open-meteo-mcp/README.md"
+      ],
+      "expected_sections": [
+        "analyze.ts",
+        "Weather comparison",
+        "function"
+      ]
+    },
+    {
+      "query": "Where are scheduled weather jobs created, listed, summarized, and cancelled?",
+      "expected_sources": [
+        "open-meteo-mcp/src/tools/schedule.ts",
+        "open-meteo-mcp/README.md",
+        "open-meteo-mcp/src/scheduler.ts"
+      ],
+      "expected_sections": [
+        "schedule.ts",
+        "Scheduled collection",
+        "function"
+      ]
+    },
+    {
+      "query": "Which code fetches weather forecast data from Open-Meteo APIs?",
+      "expected_sources": [
+        "open-meteo-mcp/src/tools/forecast.ts",
+        "open-meteo-mcp/src/client.ts",
+        "open-meteo-mcp/README.md"
+      ],
+      "expected_sections": [
+        "forecast.ts",
+        "Weather data",
+        "function"
+      ]
+    },
+    {
+      "query": "Where is geocoding for city names implemented in the weather MCP server?",
+      "expected_sources": [
+        "open-meteo-mcp/src/tools/geocoding.ts",
+        "open-meteo-mcp/README.md"
+      ],
+      "expected_sections": [
+        "geocoding.ts",
+        "geocode",
+        "function"
+      ]
+    }
+  ]
+}

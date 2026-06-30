@@ -80,10 +80,12 @@ def compare_indexes(
     embedder: Embedder,
     queries_path: Optional[Path] = None,
     top_k: int = 5,
+    search_mode: str = "dense",
 ) -> Dict[str, Any]:
     indexes = {strategy: VectorIndex(index_root / strategy) for strategy in strategies}
     report: Dict[str, Any] = {
         "created_at": datetime.utcnow().isoformat(timespec="seconds") + "Z",
+        "search_mode": search_mode,
         "strategies": {},
     }
     for strategy, index in indexes.items():
@@ -95,7 +97,7 @@ def compare_indexes(
     if queries_path:
         queries = load_queries(queries_path)
         for strategy, index in indexes.items():
-            report["strategies"][strategy]["retrieval"] = evaluate_index(index, embedder, queries, top_k=top_k)
+            report["strategies"][strategy]["retrieval"] = evaluate_index(index, embedder, queries, top_k=top_k, search_mode=search_mode)
         report["queries"] = queries
 
     return report
@@ -116,6 +118,7 @@ def evaluate_index(
     embedder: Embedder,
     queries: Sequence[Dict[str, Any]],
     top_k: int = 5,
+    search_mode: str = "hybrid",
 ) -> Dict[str, Any]:
     if not queries:
         return {}
@@ -123,7 +126,7 @@ def evaluate_index(
     rows = []
     for query in queries:
         vector = embedder.embed([query["query"]])
-        results = index.search(vector, top_k=search_k)
+        results = index.search(vector, top_k=search_k, mode=search_mode, query_text=query["query"])
         rows.append(evaluate_query(query, results))
 
     return {
@@ -140,22 +143,22 @@ def evaluate_index(
 
 
 def evaluate_query(query: Dict[str, Any], results: Sequence[Any]) -> Dict[str, Any]:
-    expected_source = query.get("expected_source")
-    expected_section = query.get("expected_section")
+    expected_sources = expected_values(query, "expected_source", "expected_sources")
+    expected_sections = expected_values(query, "expected_section", "expected_sections")
     source_ranks = [
         rank
         for rank, result in enumerate(results, start=1)
-        if expected_source and source_matches(str(result.chunk.get("source")), str(expected_source))
+        if expected_sources and any(source_matches(str(result.chunk.get("source")), expected) for expected in expected_sources)
     ]
     section_ranks = [
         rank
         for rank, result in enumerate(results, start=1)
-        if expected_section and section_matches(str(result.chunk.get("section")), str(expected_section))
+        if expected_sections and any(section_matches(str(result.chunk.get("section")), expected) for expected in expected_sections)
     ]
     return {
         "query": query["query"],
-        "expected_source": expected_source,
-        "expected_section": expected_section,
+        "expected_sources": expected_sources,
+        "expected_sections": expected_sections,
         "source_rank": source_ranks[0] if source_ranks else None,
         "section_rank": section_ranks[0] if section_ranks else None,
         "source_hit_at_1": 1 if source_ranks and source_ranks[0] <= 1 else 0,
@@ -164,12 +167,14 @@ def evaluate_query(query: Dict[str, Any], results: Sequence[Any]) -> Dict[str, A
         "section_hit_at_1": 1 if section_ranks and section_ranks[0] <= 1 else 0,
         "section_hit_at_3": 1 if section_ranks and section_ranks[0] <= 3 else 0,
         "section_hit_at_5": 1 if section_ranks and section_ranks[0] <= 5 else 0,
-        "has_expected_section": bool(expected_section),
+        "has_expected_section": bool(expected_sections),
         "mrr_source": 1.0 / source_ranks[0] if source_ranks else 0.0,
         "top_results": [
             {
                 "rank": rank,
                 "score": round(float(result.score), 4),
+                "dense_score": round(float(getattr(result, "dense_score", result.score)), 4),
+                "lexical_score": round(float(getattr(result, "lexical_score", 0.0) or 0.0), 4),
                 "source": result.chunk.get("source"),
                 "section": result.chunk.get("section"),
                 "chunk_id": result.chunk.get("chunk_id"),
@@ -187,6 +192,17 @@ def section_matches(actual: str, expected: str) -> bool:
     return expected.lower() in actual.lower() or actual.lower() in expected.lower()
 
 
+def expected_values(query: Dict[str, Any], single_key: str, list_key: str) -> List[str]:
+    values = query.get(list_key)
+    if values is None:
+        values = query.get(single_key)
+    if values is None:
+        return []
+    if isinstance(values, str):
+        return [values]
+    return [str(value) for value in values]
+
+
 def average(values: Iterable[float]) -> Optional[float]:
     items = list(values)
     if not items:
@@ -197,6 +213,7 @@ def average(values: Iterable[float]) -> Optional[float]:
 def render_markdown_report(report: Dict[str, Any]) -> str:
     lines = ["# Chunking Strategy Comparison", ""]
     lines.append("Generated at: `%s`" % report.get("created_at", ""))
+    lines.append("Search mode: `%s`" % report.get("search_mode", "dense"))
     lines.append("")
     lines.append("## Chunk Statistics")
     lines.append("")
@@ -248,7 +265,10 @@ def render_markdown_report(report: Dict[str, Any]) -> str:
                 lines.append("- `%s` -> source rank: `%s`, section rank: `%s`" % (row["query"], row["source_rank"], row["section_rank"]))
                 if row["top_results"]:
                     top = row["top_results"][0]
-                    lines.append("  - top1: `%s` / `%s` score `%s`" % (top["source"], top["section"], top["score"]))
+                    lines.append(
+                        "  - top1: `%s` / `%s` score `%s` dense `%s` lexical `%s`"
+                        % (top["source"], top["section"], top["score"], top.get("dense_score"), top.get("lexical_score"))
+                    )
             lines.append("")
 
     lines.append("## Interpretation")
@@ -258,4 +278,3 @@ def render_markdown_report(report: Dict[str, Any]) -> str:
     lines.append("- Prefer the strategy with stronger retrieval metrics unless its chunk sizes are too uneven for the target context window.")
     lines.append("")
     return "\n".join(lines)
-

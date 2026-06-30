@@ -1,7 +1,8 @@
 import json
 
 from rag_indexer.embeddings import HashEmbedder
-from rag_indexer.pipeline import build_index, compare_indexes
+from rag_indexer.pipeline import build_index, compare_indexes, evaluate_query
+from rag_indexer.vector_store import SearchResult
 
 
 def test_build_index_and_compare_with_hash_embedder(tmp_path) -> None:
@@ -42,3 +43,20 @@ def test_build_index_and_compare_with_hash_embedder(tmp_path) -> None:
     assert report["strategies"]["fixed"]["retrieval"]["source_hit_at_1"] == 1.0
     assert report["strategies"]["structural"]["retrieval"]["source_hit_at_1"] == 1.0
 
+
+def test_evaluate_query_accepts_multiple_expected_sources() -> None:
+    query = {
+        "query": "How does the bot connect MCP servers?",
+        "expected_sources": ["tg-agent/README.md", "tg-agent/src/mcp_client.rs"],
+        "expected_sections": ["Runtime MCP", "function connect"],
+    }
+    results = [
+        SearchResult({"source": "tg-agent/AGENTS.md", "section": "Context"}, 0.9),
+        SearchResult({"source": "tg-agent/src/mcp_client.rs", "section": "function connect"}, 0.8),
+    ]
+
+    row = evaluate_query(query, results)
+
+    assert row["source_rank"] == 2
+    assert row["section_rank"] == 2
+    assert row["source_hit_at_3"] == 1
