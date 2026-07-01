@@ -16,6 +16,7 @@ def main() -> None:
     add_build_parser(subparsers)
     add_build_all_parser(subparsers)
     add_compare_parser(subparsers)
+    add_compare_modes_parser(subparsers)
     add_search_parser(subparsers)
     add_answer_parser(subparsers)
     add_evaluate_answers_parser(subparsers)
@@ -29,6 +30,8 @@ def main() -> None:
             run_build(args)
     elif args.command == "compare":
         run_compare(args)
+    elif args.command == "compare-modes":
+        run_compare_modes(args)
     elif args.command == "search":
         run_search(args)
     elif args.command == "answer":
@@ -74,9 +77,26 @@ def add_compare_parser(subparsers: argparse._SubParsersAction) -> None:
     parser.add_argument("--strategies", default="fixed,structural")
     parser.add_argument("--queries", type=Path, default=None)
     parser.add_argument("--top-k", type=int, default=5)
-    parser.add_argument("--search-mode", choices=["dense", "hybrid"], default="dense")
+    parser.add_argument("--candidate-k", type=int, default=None, help="Retrieve this many candidates before relevance filtering.")
+    parser.add_argument("--similarity-threshold", type=float, default=None, help="Drop results below this final score.")
+    parser.add_argument("--rewrite-query", action="store_true", help="Use heuristic query rewrite before embedding/search.")
+    parser.add_argument("--search-mode", choices=["dense", "hybrid", "lexical"], default="dense")
     parser.add_argument("--report", type=Path, default=Path("reports/chunking_comparison.md"))
     parser.add_argument("--json-report", type=Path, default=Path("reports/chunking_comparison.json"))
+    add_common_embedding_args(parser)
+
+
+def add_compare_modes_parser(subparsers: argparse._SubParsersAction) -> None:
+    parser = subparsers.add_parser("compare-modes", help="Compare baseline retrieval vs rewrite+filter retrieval.")
+    parser.add_argument("--index-root", type=Path, default=Path("indexes-real-qwen"))
+    parser.add_argument("--strategies", default="structural")
+    parser.add_argument("--queries", type=Path, default=Path("evaluation/real_project_queries.json"))
+    parser.add_argument("--top-k", type=int, default=5)
+    parser.add_argument("--candidate-k", type=int, default=12)
+    parser.add_argument("--similarity-threshold", type=float, default=0.8)
+    parser.add_argument("--search-mode", choices=["dense", "hybrid", "lexical"], default="hybrid")
+    parser.add_argument("--report", type=Path, default=Path("reports/rag_mode_comparison.md"))
+    parser.add_argument("--json-report", type=Path, default=Path("reports/rag_mode_comparison.json"))
     add_common_embedding_args(parser)
 
 
@@ -85,14 +105,20 @@ def add_search_parser(subparsers: argparse._SubParsersAction) -> None:
     parser.add_argument("--index", type=Path, required=True)
     parser.add_argument("--query", required=True)
     parser.add_argument("--top-k", type=int, default=5)
-    parser.add_argument("--search-mode", choices=["dense", "hybrid"], default="dense")
+    parser.add_argument("--candidate-k", type=int, default=None, help="Retrieve this many candidates before relevance filtering.")
+    parser.add_argument("--similarity-threshold", type=float, default=None, help="Drop results below this final score.")
+    parser.add_argument("--rewrite-query", action="store_true", help="Use heuristic query rewrite before embedding/search.")
+    parser.add_argument("--search-mode", choices=["dense", "hybrid", "lexical"], default="dense")
     add_common_embedding_args(parser)
 
 
 def add_common_agent_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--index", type=Path, default=Path("indexes-real-qwen/structural"))
     parser.add_argument("--top-k", type=int, default=5)
-    parser.add_argument("--search-mode", choices=["dense", "hybrid"], default="hybrid")
+    parser.add_argument("--candidate-k", type=int, default=None)
+    parser.add_argument("--similarity-threshold", type=float, default=None)
+    parser.add_argument("--rewrite-query", action="store_true")
+    parser.add_argument("--search-mode", choices=["dense", "hybrid", "lexical"], default="hybrid")
     parser.add_argument("--chat-model", default="qwen2.5:7b", help="Ollama chat model.")
     parser.add_argument("--chat-url", default="http://localhost:11434")
     parser.add_argument("--max-context-chars", type=int, default=8000)
@@ -150,6 +176,9 @@ def run_compare(args: argparse.Namespace) -> None:
         queries_path=args.queries,
         top_k=args.top_k,
         search_mode=args.search_mode,
+        candidate_k=args.candidate_k,
+        similarity_threshold=args.similarity_threshold,
+        rewrite_query=args.rewrite_query,
     )
     args.report.parent.mkdir(parents=True, exist_ok=True)
     args.json_report.parent.mkdir(parents=True, exist_ok=True)
@@ -159,12 +188,67 @@ def run_compare(args: argparse.Namespace) -> None:
     print("Wrote %s" % args.json_report)
 
 
+def run_compare_modes(args: argparse.Namespace) -> None:
+    strategies = [item.strip() for item in args.strategies.split(",") if item.strip()]
+    default_model = model_from_first_manifest(args.index_root, strategies)
+    embedder = make_embedder(args, default_model=default_model)
+    baseline = compare_indexes(
+        index_root=args.index_root,
+        strategies=strategies,
+        embedder=embedder,
+        queries_path=args.queries,
+        top_k=args.top_k,
+        search_mode=args.search_mode,
+        candidate_k=args.top_k,
+        similarity_threshold=None,
+        rewrite_query=False,
+    )
+    enhanced = compare_indexes(
+        index_root=args.index_root,
+        strategies=strategies,
+        embedder=embedder,
+        queries_path=args.queries,
+        top_k=args.top_k,
+        search_mode=args.search_mode,
+        candidate_k=args.candidate_k,
+        similarity_threshold=args.similarity_threshold,
+        rewrite_query=True,
+    )
+    report = {
+        "baseline": baseline,
+        "enhanced": enhanced,
+        "comparison": mode_summary(baseline, enhanced, strategies),
+    }
+    args.report.parent.mkdir(parents=True, exist_ok=True)
+    args.json_report.parent.mkdir(parents=True, exist_ok=True)
+    args.report.write_text(render_mode_comparison(report, strategies), encoding="utf-8")
+    args.json_report.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print("Wrote %s" % args.report)
+    print("Wrote %s" % args.json_report)
+
+
 def run_search(args: argparse.Namespace) -> None:
     index = VectorIndex(args.index)
     default_model = index.manifest.get("model")
     embedder = make_embedder(args, default_model=default_model)
-    vector = embedder.embed([args.query])
-    results = index.search(vector, top_k=args.top_k, mode=args.search_mode, query_text=args.query)
+    from .retrieval import RetrievalSettings, retrieve_with_trace
+
+    results, trace = retrieve_with_trace(
+        index,
+        embedder,
+        args.query,
+        RetrievalSettings(
+            top_k=args.top_k,
+            candidate_k=args.candidate_k,
+            search_mode=args.search_mode,
+            similarity_threshold=args.similarity_threshold,
+            rewrite_query=args.rewrite_query,
+        ),
+    )
+    print(
+        "Retrieval: query=%r candidates=%s kept=%s returned=%s threshold=%s"
+        % (trace.search_query, trace.candidate_count, trace.filtered_count, trace.returned_count, trace.similarity_threshold)
+    )
     for rank, result in enumerate(results, start=1):
         chunk = result.chunk
         preview = " ".join(str(chunk.get("text", "")).split())[:260]
@@ -195,6 +279,9 @@ def make_agent(args: argparse.Namespace) -> RagAgent:
         top_k=args.top_k,
         search_mode=args.search_mode,
         max_context_chars=args.max_context_chars,
+        candidate_k=args.candidate_k,
+        similarity_threshold=args.similarity_threshold,
+        rewrite_query=args.rewrite_query,
     )
 
 
@@ -234,6 +321,55 @@ def run_evaluate_answers(args: argparse.Namespace) -> None:
     print("RAG source hit@5: %s" % report["summary"]["rag_source_hit_at_5"])
     print("Plain expectation coverage: %s" % report["summary"]["plain_expectation_coverage"])
     print("RAG expectation coverage: %s" % report["summary"]["rag_expectation_coverage"])
+
+
+def mode_summary(baseline, enhanced, strategies):
+    rows = {}
+    for strategy in strategies:
+        base = baseline["strategies"][strategy].get("retrieval_metrics", {})
+        new = enhanced["strategies"][strategy].get("retrieval_metrics", {})
+        rows[strategy] = {
+            "baseline_hit_at_1": base.get("source_hit_at_1"),
+            "enhanced_hit_at_1": new.get("source_hit_at_1"),
+            "baseline_hit_at_5": base.get("source_hit_at_5"),
+            "enhanced_hit_at_5": new.get("source_hit_at_5"),
+            "baseline_mrr": base.get("mrr_source"),
+            "enhanced_mrr": new.get("mrr_source"),
+            "baseline_avg_latency_ms": base.get("avg_latency_ms"),
+            "enhanced_avg_latency_ms": new.get("avg_latency_ms"),
+            "baseline_avg_returned": base.get("avg_returned"),
+            "enhanced_avg_returned": new.get("avg_returned"),
+        }
+    return rows
+
+
+def render_mode_comparison(report, strategies):
+    lines = ["# RAG Mode Comparison", ""]
+    lines.append("Baseline: no query rewrite, no relevance filter.")
+    lines.append("Enhanced: heuristic query rewrite + similarity threshold after candidate retrieval.")
+    lines.append("")
+    lines.append("| Strategy | hit@1 base | hit@1 enhanced | hit@5 base | hit@5 enhanced | MRR base | MRR enhanced | Avg ms base | Avg ms enhanced | Avg returned base | Avg returned enhanced |")
+    lines.append("| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |")
+    for strategy in strategies:
+        row = report["comparison"][strategy]
+        lines.append(
+            "| %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s |"
+            % (
+                strategy,
+                row["baseline_hit_at_1"],
+                row["enhanced_hit_at_1"],
+                row["baseline_hit_at_5"],
+                row["enhanced_hit_at_5"],
+                row["baseline_mrr"],
+                row["enhanced_mrr"],
+                row["baseline_avg_latency_ms"],
+                row["enhanced_avg_latency_ms"],
+                row["baseline_avg_returned"],
+                row["enhanced_avg_returned"],
+            )
+        )
+    lines.append("")
+    return "\n".join(lines)
 
 
 def model_from_first_manifest(index_root: Path, strategies) -> Optional[str]:

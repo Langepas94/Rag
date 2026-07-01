@@ -5,6 +5,7 @@ use teloxide::{
     utils::command::BotCommands,
 };
 
+use crate::agent::session::RagMode;
 use crate::{mcp_client::ConnectParams, state::BotState};
 
 #[derive(BotCommands, Clone)]
@@ -40,6 +41,8 @@ pub enum Command {
     Facts,
     #[command(description = "travel-weather flow: /trip <cities/dates>")]
     Trip(String),
+    #[command(description = "RAG mode: /rag [on|off|compare|status]")]
+    Rag(String),
     #[command(description = "reset this chat's memory (keeps long-term)")]
     Reset,
     #[command(description = "clear short context and active flow, keep profile and durable facts")]
@@ -58,6 +61,7 @@ fn base_commands() -> Vec<BotCommand> {
         cmd("info", "view or save extra info"),
         cmd("facts", "show learned facts"),
         cmd("trip", "run the travel-weather flow"),
+        cmd("rag", "switch RAG mode"),
         cmd("watches", "list active watches"),
         cmd("unwatch", "stop a watch"),
         cmd("compact", "clear short context and active flow"),
@@ -156,6 +160,35 @@ async fn handle_text(bot: Bot, msg: Message, state: BotState) -> anyhow::Result<
     if text.is_empty() {
         return Ok(());
     }
+
+    let mut session = crate::agent::session::load(chat.0);
+    match session.effective_rag_mode() {
+        RagMode::On | RagMode::Compare => {
+            let mode = session.effective_rag_mode();
+            let typing = spawn_typing(bot.clone(), chat);
+            bot.send_message(chat, "RAG: searching sources and asking the model...")
+                .await
+                .ok();
+            let answer = run_rag_answer(&text, mode).await;
+            typing.abort();
+            match answer {
+                Ok(answer) => {
+                    for chunk in split_chunks(&answer, 3900) {
+                        if !chunk.trim().is_empty() {
+                            bot.send_message(chat, chunk).await?;
+                        }
+                    }
+                }
+                Err(e) => {
+                    tracing::error!("rag answer for chat {}: {e:#}", chat.0);
+                    bot.send_message(chat, format!("RAG error: {e:#}")).await?;
+                }
+            }
+            return Ok(());
+        }
+        RagMode::Off => {}
+    }
+
     let Some(llm) = state.llm.clone() else {
         bot.send_message(
             chat,
@@ -177,7 +210,6 @@ async fn handle_text(bot: Bot, msg: Message, state: BotState) -> anyhow::Result<
         }
     });
 
-    let mut session = crate::agent::session::load(chat.0);
     let outcome = crate::agent::run_turn(&llm, &state, &mut session, &text, Some(tx)).await;
     typing.abort();
     let _ = prog_task.await;
@@ -348,6 +380,9 @@ async fn handle_command(
         Command::Trip(args) => {
             handle_trip(&bot, chat, &state, &args).await?;
         }
+        Command::Rag(args) => {
+            handle_rag_mode(&bot, chat, &args).await?;
+        }
         Command::Reset => {
             let mut session = crate::agent::session::load(chat.0);
             session.memory.reset_for_new_session();
@@ -417,6 +452,7 @@ async fn send_help(bot: &Bot, chat: ChatId, is_root: bool) -> anyhow::Result<()>
         "/info [label text | clear] — save extra preferences".to_string(),
         "/facts — show your learned facts".to_string(),
         "/trip <cities/dates> — travel-weather flow".to_string(),
+        "/rag [on|off|compare|status] — switch RAG mode for free-form questions".to_string(),
         "/watches — list your active watches".to_string(),
         "/unwatch <id> | all — stop your watches".to_string(),
         "/compact — clear short context and active flow, keep profile and durable facts"
@@ -444,6 +480,78 @@ async fn send_help(bot: &Bot, chat: ChatId, is_root: bool) -> anyhow::Result<()>
 }
 
 /// `/profile` — show; `/profile <key> <value>` — set; `/profile clear`.
+async fn handle_rag_mode(bot: &Bot, chat: ChatId, args: &str) -> anyhow::Result<()> {
+    let mut session = crate::agent::session::load(chat.0);
+    let arg = args.trim().to_ascii_lowercase();
+    let mode = match arg.as_str() {
+        "" | "status" => {
+            bot.send_message(
+                chat,
+                format!(
+                    "RAG mode: {}\n{}\nUse /rag on, /rag off, or /rag compare.",
+                    rag_mode_label(session.effective_rag_mode()),
+                    rag_runtime_status()
+                ),
+            )
+            .await?;
+            return Ok(());
+        }
+        "on" | "rag" => RagMode::On,
+        "off" | "plain" | "normal" => RagMode::Off,
+        "compare" | "cmp" => RagMode::Compare,
+        _ => {
+            bot.send_message(chat, "Usage: /rag [on|off|compare|status]")
+                .await?;
+            return Ok(());
+        }
+    };
+    session.set_rag_mode(mode);
+    crate::agent::session::save(&session)?;
+    bot.send_message(chat, format!("RAG mode set to {}.", rag_mode_label(mode)))
+        .await?;
+    Ok(())
+}
+
+fn rag_mode_label(mode: RagMode) -> &'static str {
+    match mode {
+        RagMode::Off => "off (normal bot)",
+        RagMode::On => "on",
+        RagMode::Compare => "compare",
+    }
+}
+
+fn rag_runtime_status() -> String {
+    let workdir = rag_workdir();
+    let python = rag_python(workdir.as_ref());
+    let index = std::env::var("RAG_INDEX").unwrap_or_else(|_| {
+        workdir
+            .as_ref()
+            .map(|dir| dir.join("indexes-real-qwen/structural"))
+            .unwrap_or_else(|| std::path::PathBuf::from("indexes-real-qwen/structural"))
+            .to_string_lossy()
+            .to_string()
+    });
+    let index_path = std::path::PathBuf::from(&index);
+    let index_ok = index_path.join("manifest.json").exists()
+        && index_path.join("chunks.jsonl").exists()
+        && index_path.join("vectors.npy").exists();
+    format!(
+        "RAG runtime:\nworkdir: {}\npython: {} ({})\nindex: {} ({})",
+        workdir
+            .as_ref()
+            .map(|p| p.to_string_lossy().to_string())
+            .unwrap_or_else(|| "not found".to_string()),
+        python,
+        if std::path::PathBuf::from(&python).exists() {
+            "found"
+        } else {
+            "from PATH"
+        },
+        index,
+        if index_ok { "found" } else { "missing" }
+    )
+}
+
 async fn handle_profile(bot: &Bot, chat: ChatId, args: &str) -> anyhow::Result<()> {
     let mut session = crate::agent::session::load(chat.0);
     let args = args.trim();
@@ -854,7 +962,7 @@ fn server_keyboard(name: &str) -> InlineKeyboardMarkup {
     ]])
 }
 
-/// Parse `/connect` args. Two forms:
+/// Run the external RAG answer command.
 ///
 /// HTTP (URL-first, order-agnostic):
 ///   `/connect <url> [name=NAME] [auth=TOKEN] [Header:Value ...]`
@@ -864,6 +972,139 @@ fn server_keyboard(name: &str) -> InlineKeyboardMarkup {
 ///
 /// In stdio form the leading `stdio` keyword switches modes; every token that
 /// is not `name=…` / `env=…` becomes part of the spawn command, in order.
+async fn run_rag_answer(question: &str, mode: RagMode) -> anyhow::Result<String> {
+    use anyhow::Context;
+    use std::path::PathBuf;
+    use tokio::process::Command as TokioCommand;
+
+    let workdir = rag_workdir();
+    let python = rag_python(workdir.as_ref());
+    let index = std::env::var("RAG_INDEX").unwrap_or_else(|_| {
+        [
+            "indexes-real-qwen/structural",
+            "../../indexes-real-qwen/structural",
+        ]
+        .into_iter()
+        .map(PathBuf::from)
+        .find(|p| p.exists())
+        .unwrap_or_else(|| PathBuf::from("indexes-real-qwen/structural"))
+        .to_string_lossy()
+        .to_string()
+    });
+    let embed_model = std::env::var("RAG_EMBED_MODEL").unwrap_or_else(|_| "qwen3-embedding".into());
+    let chat_model = std::env::var("RAG_CHAT_MODEL").unwrap_or_else(|_| "qwen2.5:7b".into());
+    let search_mode = std::env::var("RAG_SEARCH_MODE").unwrap_or_else(|_| "hybrid".into());
+    let answer_mode = match mode {
+        RagMode::On => "rag",
+        RagMode::Compare => "compare",
+        RagMode::Off => "plain",
+    };
+
+    let mut cmd = TokioCommand::new(python);
+    cmd.arg("-m")
+        .arg("rag_indexer.cli")
+        .arg("answer")
+        .arg("--index")
+        .arg(index)
+        .arg("--query")
+        .arg(question)
+        .arg("--mode")
+        .arg(answer_mode)
+        .arg("--model")
+        .arg(embed_model)
+        .arg("--chat-model")
+        .arg(chat_model)
+        .arg("--search-mode")
+        .arg(search_mode);
+
+    if std::env::var("RAG_REWRITE_QUERY").is_ok_and(|v| is_truthy(&v)) {
+        cmd.arg("--rewrite-query");
+    }
+    if let Ok(v) = std::env::var("RAG_TOP_K") {
+        cmd.arg("--top-k").arg(v);
+    }
+    if let Ok(v) = std::env::var("RAG_CANDIDATE_K") {
+        cmd.arg("--candidate-k").arg(v);
+    }
+    if let Ok(v) = std::env::var("RAG_SIMILARITY_THRESHOLD") {
+        cmd.arg("--similarity-threshold").arg(v);
+    }
+
+    if let Some(dir) = &workdir {
+        cmd.current_dir(dir);
+        let src = dir.join("src");
+        if src.exists() {
+            let mut paths = vec![src];
+            if let Some(existing) = std::env::var_os("PYTHONPATH") {
+                paths.extend(std::env::split_paths(&existing));
+            }
+            if let Ok(pythonpath) = std::env::join_paths(paths) {
+                cmd.env("PYTHONPATH", pythonpath);
+            }
+        }
+    }
+
+    let output = cmd.output().await.context("failed to start rag-indexer")?;
+    if !output.status.success() {
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        let stdout = String::from_utf8_lossy(&output.stdout);
+        anyhow::bail!(
+            "rag-indexer exited with {}\nstdout:\n{}\nstderr:\n{}",
+            output.status,
+            stdout.trim(),
+            stderr.trim()
+        );
+    }
+
+    let text = String::from_utf8_lossy(&output.stdout).trim().to_string();
+    if text.is_empty() {
+        anyhow::bail!("rag-indexer returned an empty answer");
+    }
+    Ok(text)
+}
+
+fn rag_workdir() -> Option<std::path::PathBuf> {
+    if let Ok(dir) = std::env::var("RAG_WORKDIR") {
+        return Some(std::path::PathBuf::from(dir));
+    }
+    let current = std::env::current_dir().ok()?;
+    for candidate in [
+        current.clone(),
+        current.join(".."),
+        current.join("../.."),
+        current.join("../../.."),
+    ] {
+        if candidate.join("pyproject.toml").exists() && candidate.join("src/rag_indexer").exists() {
+            return Some(candidate);
+        }
+    }
+    Some(current)
+}
+
+fn rag_python(workdir: Option<&std::path::PathBuf>) -> String {
+    if let Ok(python) = std::env::var("RAG_PYTHON") {
+        return python;
+    }
+    if let Some(dir) = workdir {
+        for candidate in [
+            dir.join(".venv/Scripts/python.exe"),
+            dir.join(".venv/bin/python"),
+        ] {
+            if candidate.exists() {
+                return candidate.to_string_lossy().to_string();
+            }
+        }
+    }
+    "python".to_string()
+}
+
+fn is_truthy(value: &str) -> bool {
+    matches!(
+        value.trim().to_ascii_lowercase().as_str(),
+        "1" | "true" | "yes" | "on"
+    )
+}
+
 fn parse_connect(args: &str) -> Result<ConnectParams, String> {
     let mut toks = args.split_whitespace().peekable();
     if toks.peek().is_some_and(|t| *t == "stdio") {

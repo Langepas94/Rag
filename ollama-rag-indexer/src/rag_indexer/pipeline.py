@@ -1,4 +1,5 @@
 import json
+import time
 from collections import Counter
 from datetime import datetime
 from pathlib import Path
@@ -10,6 +11,7 @@ from .chunking import fixed_chunk_documents, structural_chunk_documents
 from .embeddings import Embedder
 from .loaders import estimate_page_count, load_documents
 from .models import Chunk
+from .retrieval import RetrievalSettings, retrieve_with_trace
 from .vector_store import VectorIndex, save_index
 
 
@@ -81,11 +83,20 @@ def compare_indexes(
     queries_path: Optional[Path] = None,
     top_k: int = 5,
     search_mode: str = "dense",
+    candidate_k: Optional[int] = None,
+    similarity_threshold: Optional[float] = None,
+    rewrite_query: bool = False,
 ) -> Dict[str, Any]:
     indexes = {strategy: VectorIndex(index_root / strategy) for strategy in strategies}
     report: Dict[str, Any] = {
         "created_at": datetime.utcnow().isoformat(timespec="seconds") + "Z",
         "search_mode": search_mode,
+        "retrieval": {
+            "top_k": top_k,
+            "candidate_k": candidate_k or top_k,
+            "similarity_threshold": similarity_threshold,
+            "rewrite_query": rewrite_query,
+        },
         "strategies": {},
     }
     for strategy, index in indexes.items():
@@ -97,7 +108,18 @@ def compare_indexes(
     if queries_path:
         queries = load_queries(queries_path)
         for strategy, index in indexes.items():
-            report["strategies"][strategy]["retrieval"] = evaluate_index(index, embedder, queries, top_k=top_k, search_mode=search_mode)
+            metrics = evaluate_index(
+                index,
+                embedder,
+                queries,
+                top_k=top_k,
+                search_mode=search_mode,
+                candidate_k=candidate_k,
+                similarity_threshold=similarity_threshold,
+                rewrite_query=rewrite_query,
+            )
+            report["strategies"][strategy]["retrieval_metrics"] = metrics
+            report["strategies"][strategy]["retrieval"] = metrics
         report["queries"] = queries
 
     return report
@@ -119,18 +141,35 @@ def evaluate_index(
     queries: Sequence[Dict[str, Any]],
     top_k: int = 5,
     search_mode: str = "hybrid",
+    candidate_k: Optional[int] = None,
+    similarity_threshold: Optional[float] = None,
+    rewrite_query: bool = False,
 ) -> Dict[str, Any]:
     if not queries:
         return {}
-    search_k = max(top_k, 5)
+    settings = RetrievalSettings(
+        top_k=top_k,
+        candidate_k=candidate_k or max(top_k, 5),
+        search_mode=search_mode,
+        similarity_threshold=similarity_threshold,
+        rewrite_query=rewrite_query,
+    )
     rows = []
+    started = time.perf_counter()
     for query in queries:
-        vector = embedder.embed([query["query"]])
-        results = index.search(vector, top_k=search_k, mode=search_mode, query_text=query["query"])
-        rows.append(evaluate_query(query, results))
+        results, trace = retrieve_with_trace(index, embedder, query["query"], settings)
+        row = evaluate_query(query, results)
+        row["retrieval_trace"] = trace.to_json()
+        rows.append(row)
+    elapsed = time.perf_counter() - started
 
     return {
         "query_count": len(rows),
+        "elapsed_seconds": round(elapsed, 4),
+        "avg_latency_ms": round((elapsed / float(len(rows))) * 1000.0, 2),
+        "avg_candidates": average(row["retrieval_trace"]["candidate_count"] for row in rows),
+        "avg_after_filter": average(row["retrieval_trace"]["filtered_count"] for row in rows),
+        "avg_returned": average(row["retrieval_trace"]["returned_count"] for row in rows),
         "source_hit_at_1": average(row["source_hit_at_1"] for row in rows),
         "source_hit_at_3": average(row["source_hit_at_3"] for row in rows),
         "source_hit_at_5": average(row["source_hit_at_5"] for row in rows),
@@ -214,6 +253,17 @@ def render_markdown_report(report: Dict[str, Any]) -> str:
     lines = ["# Chunking Strategy Comparison", ""]
     lines.append("Generated at: `%s`" % report.get("created_at", ""))
     lines.append("Search mode: `%s`" % report.get("search_mode", "dense"))
+    retrieval_settings = report.get("retrieval", {})
+    if retrieval_settings:
+        lines.append(
+            "Retrieval: top_k=`%s`, candidate_k=`%s`, threshold=`%s`, rewrite=`%s`"
+            % (
+                retrieval_settings.get("top_k"),
+                retrieval_settings.get("candidate_k"),
+                retrieval_settings.get("similarity_threshold"),
+                retrieval_settings.get("rewrite_query"),
+            )
+        )
     lines.append("")
     lines.append("## Chunk Statistics")
     lines.append("")
@@ -236,15 +286,15 @@ def render_markdown_report(report: Dict[str, Any]) -> str:
         )
     lines.append("")
 
-    if any("retrieval" in data for data in report["strategies"].values()):
+    if any("retrieval_metrics" in data for data in report["strategies"].values()):
         lines.append("## Retrieval Metrics")
         lines.append("")
-        lines.append("| Strategy | Queries | hit@1 | hit@3 | hit@5 | section@3 | MRR |")
-        lines.append("| --- | ---: | ---: | ---: | ---: | ---: | ---: |")
+        lines.append("| Strategy | Queries | hit@1 | hit@3 | hit@5 | section@3 | MRR | Avg ms | Avg kept |")
+        lines.append("| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |")
         for strategy, data in report["strategies"].items():
-            metrics = data.get("retrieval", {})
+            metrics = data.get("retrieval_metrics", {})
             lines.append(
-                "| %s | %s | %s | %s | %s | %s | %s |"
+                "| %s | %s | %s | %s | %s | %s | %s | %s | %s |"
                 % (
                     strategy,
                     metrics.get("query_count"),
@@ -253,6 +303,8 @@ def render_markdown_report(report: Dict[str, Any]) -> str:
                     metrics.get("source_hit_at_5"),
                     metrics.get("section_hit_at_3"),
                     metrics.get("mrr_source"),
+                    metrics.get("avg_latency_ms"),
+                    metrics.get("avg_after_filter"),
                 )
             )
         lines.append("")
@@ -261,7 +313,7 @@ def render_markdown_report(report: Dict[str, Any]) -> str:
         for strategy, data in report["strategies"].items():
             lines.append("### %s" % strategy)
             lines.append("")
-            for row in data.get("retrieval", {}).get("rows", []):
+            for row in data.get("retrieval_metrics", {}).get("rows", []):
                 lines.append("- `%s` -> source rank: `%s`, section rank: `%s`" % (row["query"], row["source_rank"], row["section_rank"]))
                 if row["top_results"]:
                     top = row["top_results"][0]

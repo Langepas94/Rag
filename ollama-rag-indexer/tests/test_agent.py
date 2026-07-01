@@ -54,9 +54,17 @@ def test_build_rag_user_message_includes_ranked_sources() -> None:
 
     message = build_rag_user_message("How connect?", [result])
 
-    assert "Question:" in message
+    assert "User question:" in message
     assert "[1] source=tg-agent/README.md" in message
     assert "Use /connect and mcp_connect." in message
+
+
+def test_build_rag_user_message_preserves_user_language_instruction() -> None:
+    message = build_rag_user_message("Как работают MCP?", [])
+
+    assert "User question:" in message
+    assert "If the user question is in Russian, answer in Russian." in message
+    assert "Найденный контекст" in message
 
 
 def test_evaluate_answer_pair_compares_plain_and_rag() -> None:

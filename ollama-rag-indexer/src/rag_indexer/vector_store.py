@@ -28,14 +28,32 @@ class VectorIndex:
         self.faiss_index = self._load_faiss()
         self._lexical = LexicalIndex(self.chunks)
 
-    def search(self, query_vector: np.ndarray, top_k: int = 5, mode: str = "dense", query_text: Optional[str] = None) -> List[SearchResult]:
+    def search(self, query_vector: Optional[np.ndarray], top_k: int = 5, mode: str = "dense", query_text: Optional[str] = None) -> List[SearchResult]:
+        top_k = min(top_k, len(self.chunks))
+
+        if mode not in {"dense", "hybrid", "lexical"}:
+            raise ValueError("Unknown search mode: %s" % mode)
+
+        if mode == "lexical":
+            if not query_text:
+                return []
+            lexical_scores = self._lexical.scores(query_text)
+            indices = np.argsort(-lexical_scores)[:top_k]
+            return [
+                SearchResult(
+                    self.chunks[int(index)],
+                    float(lexical_scores[int(index)]),
+                    dense_score=None,
+                    lexical_score=float(lexical_scores[int(index)]),
+                )
+                for index in indices
+            ]
+
+        if query_vector is None:
+            raise ValueError("query_vector is required for %s search" % mode)
         if query_vector.ndim == 1:
             query_vector = query_vector.reshape(1, -1)
         query_vector = l2_normalize(query_vector.astype(np.float32))
-        top_k = min(top_k, len(self.chunks))
-
-        if mode not in {"dense", "hybrid"}:
-            raise ValueError("Unknown search mode: %s" % mode)
 
         dense_scores = self._dense_scores(query_vector)
         if mode == "hybrid" and query_text:
@@ -139,7 +157,7 @@ def tokenize_search_text(chunk: Dict[str, Any]) -> List[str]:
 def tokenize(text: str) -> List[str]:
     expanded = re.sub(r"([a-z0-9])([A-Z])", r"\1 \2", text)
     expanded = expanded.replace("_", " ").replace("-", " ").replace("/", " ")
-    return [token.lower() for token in re.findall(r"[A-Za-zА-Яа-я0-9]+", expanded)]
+    return [token.lower() for token in re.findall(r"[^\W_]+", expanded, flags=re.UNICODE)]
 
 
 def save_index(index_dir: Path, chunks: List[Chunk], vectors: np.ndarray, manifest: Dict[str, Any]) -> Dict[str, Any]:

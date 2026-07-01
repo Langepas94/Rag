@@ -7,6 +7,20 @@ use serde::{Deserialize, Serialize};
 
 use super::{invariants::Invariant, memory::AgentMemory, notes::UserNotes, profile::UserProfile};
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum RagMode {
+    Off,
+    On,
+    Compare,
+}
+
+impl Default for RagMode {
+    fn default() -> Self {
+        Self::Off
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ChatSession {
     pub chat_id: i64,
@@ -24,6 +38,13 @@ pub struct ChatSession {
     /// turns). `None` outside a planning conversation.
     #[serde(default)]
     pub trip: Option<super::flow::TripFlowState>,
+    /// When enabled, free-form Telegram messages are answered by the external
+    /// RAG agent instead of the normal MCP/travel assistant.
+    #[serde(default)]
+    pub rag_enabled: bool,
+    /// Free-form answer mode controlled by /rag.
+    #[serde(default)]
+    pub rag_mode: RagMode,
 }
 
 impl ChatSession {
@@ -35,7 +56,22 @@ impl ChatSession {
             notes: UserNotes::default(),
             invariants: Vec::new(),
             trip: None,
+            rag_enabled: false,
+            rag_mode: RagMode::Off,
         }
+    }
+
+    pub fn effective_rag_mode(&self) -> RagMode {
+        if self.rag_mode == RagMode::Off && self.rag_enabled {
+            RagMode::On
+        } else {
+            self.rag_mode
+        }
+    }
+
+    pub fn set_rag_mode(&mut self, mode: RagMode) {
+        self.rag_mode = mode;
+        self.rag_enabled = mode == RagMode::On;
     }
 
     /// Effective invariants: custom if set, else the travel-weather defaults.

@@ -8,13 +8,15 @@ from typing import Any, Dict, Iterable, List, Optional, Protocol, Sequence
 import requests
 
 from .embeddings import Embedder
+from .retrieval import RetrievalSettings, retrieve_with_settings
 from .vector_store import SearchResult, VectorIndex
 
 
 DEFAULT_SYSTEM_PROMPT = (
-    "You are a precise assistant. Answer in the user's language. "
+    "You are a precise assistant. Always answer in the same language as the user's question. "
+    "If the question is in Russian, answer in Russian even when source text or RAG instructions are in English. "
     "When context sources are provided, use them as the primary evidence. "
-    "If the context is insufficient, say what is missing instead of inventing details."
+    "If the context is insufficient or irrelevant, say what is missing instead of inventing details."
 )
 
 
@@ -80,6 +82,9 @@ class RagAgent:
         search_mode: str = "hybrid",
         system_prompt: str = DEFAULT_SYSTEM_PROMPT,
         max_context_chars: int = 8000,
+        candidate_k: Optional[int] = None,
+        similarity_threshold: Optional[float] = None,
+        rewrite_query: bool = False,
     ) -> None:
         self.chat_client = chat_client
         self.embedder = embedder
@@ -88,6 +93,9 @@ class RagAgent:
         self.search_mode = search_mode
         self.system_prompt = system_prompt
         self.max_context_chars = max_context_chars
+        self.candidate_k = candidate_k
+        self.similarity_threshold = similarity_threshold
+        self.rewrite_query = rewrite_query
 
     def answer(self, question: str, use_rag: bool = True) -> AgentAnswer:
         sources: List[Dict[str, Any]] = []
@@ -101,6 +109,9 @@ class RagAgent:
                 question,
                 top_k=self.top_k,
                 search_mode=self.search_mode,
+                candidate_k=self.candidate_k,
+                similarity_threshold=self.similarity_threshold,
+                rewrite_query=self.rewrite_query,
             )
             sources = [source_from_result(result, rank) for rank, result in enumerate(results, start=1)]
             user_content = build_rag_user_message(question, results, self.max_context_chars)
@@ -128,9 +139,18 @@ def retrieve_chunks(
     question: str,
     top_k: int = 5,
     search_mode: str = "hybrid",
+    candidate_k: Optional[int] = None,
+    similarity_threshold: Optional[float] = None,
+    rewrite_query: bool = False,
 ) -> List[SearchResult]:
-    vector = embedder.embed([question])
-    return index.search(vector, top_k=top_k, mode=search_mode, query_text=question)
+    settings = RetrievalSettings(
+        top_k=top_k,
+        candidate_k=candidate_k,
+        search_mode=search_mode,
+        similarity_threshold=similarity_threshold,
+        rewrite_query=rewrite_query,
+    )
+    return retrieve_with_settings(index, embedder, question, settings)
 
 
 def build_rag_user_message(question: str, results: Sequence[SearchResult], max_context_chars: int = 8000) -> str:
@@ -155,9 +175,14 @@ def build_rag_user_message(question: str, results: Sequence[SearchResult], max_c
             break
 
     return (
-        "Question:\n%s\n\n"
-        "Retrieved context:\n%s\n\n"
-        "Answer using the retrieved context. Cite source paths in prose when they matter."
+        "User question:\n%s\n\n"
+        "Retrieved context / Найденный контекст:\n%s\n\n"
+        "Instructions:\n"
+        "- Answer in the same language as the user question.\n"
+        "- If the user question is in Russian, answer in Russian.\n"
+        "- Use the retrieved context as evidence, but ignore irrelevant chunks.\n"
+        "- Cite source paths in prose when they matter.\n"
+        "- If the context is insufficient, say what is missing instead of guessing."
         % (question, "\n\n---\n\n".join(context_blocks))
     )
 
